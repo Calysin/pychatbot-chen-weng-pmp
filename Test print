@@ -1,0 +1,2 @@
+x = str(input("Saisir votre nom : "))
+print ("Votre nom est {}".format(x))
