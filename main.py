@@ -43,4 +43,25 @@ def extraire_noms_presidents(L):
     return liste_nom_final
 
 
+def association_prenom(L):
 
+    liste_complete=[]
+
+    for i in range(len(L)):
+
+        if L[i]== 'Chirac':
+            liste_complete.append('Jacques '+L[i])
+
+        elif L[i]== 'Giscard dEstaing':
+            liste_complete.append('Valéry ' + L[i])
+
+        elif L[i] == 'Hollande' or L[i] == 'Mitterand':
+            liste_complete.append('François ' + L[i])
+
+        elif L[i] == 'Macron':
+            liste_complete.append('Emmanuel ' + L[i])
+
+        elif L[i] == 'Sarkozy':
+            liste_complete.append('Nicolas ' + L[i])
+
+    return liste_complete
