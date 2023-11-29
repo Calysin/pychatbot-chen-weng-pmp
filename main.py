@@ -66,3 +66,6 @@ def association_prenom(L):
 
     return liste_complete
 
+def print_noms(L):
+    for i in range(len(L)):
+        print(L[i])
