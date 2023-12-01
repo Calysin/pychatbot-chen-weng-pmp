@@ -96,6 +96,19 @@ def extraire_noms_avec_numero(L):
         liste.append(nom)
     return liste
 
+def ConversionMajusculeEnMinuscule(L):
+    ListeNomNum = extraire_noms_avec_numero(L)
+    for i in range(len(ListeNomNum)):
+        with open("speeches/Nomination_{}.txt".format(ListeNomNum[i]), "r") as f, open("cleaned/CleanedNomination_{}.txt".format(ListeNomNum[i]), "w") as f1: #Ouvre les deux fichiers
+            contenu = f.readlines() #Retenir toutes les lignes dans contenu
+            for ligne in contenu: #Prendre les lignes qui sont dans le contenu
+                for lettre in ligne: #Prendre les lettres dans lignes
+                    if 65 <= ord(lettre) <= 90: #Si la lettre est une majuscule
+                        LettreMinuscule = lettre.lower() #Alors mettre la lettre en minuscule
+                        f1.write(LettreMinuscule) #Écrire la nouvelle lettre en minuscule dans le deuxième fichier
+                    else:
+                        f1.write(lettre) #Écrire la minuscule qui était déjà minuscule dans le deuxième fichier
+
 def del_ponctuations(L):
     ponctuation = ['!', ':', ";", '?', '.', ',', '(', ')', '{', '}', '[', ']'] #caractere devant être delete
     special=["'", '"', '-'] #caractere devant etre remplacer par un espace
