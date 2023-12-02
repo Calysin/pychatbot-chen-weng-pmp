@@ -65,7 +65,7 @@ def association_prenom(L):
         elif L[i]== 'Giscard dEstaing':
             liste_complete.append('Valéry ' + L[i])
 
-        elif L[i] == 'Hollande' or L[i] == 'Mitterand':
+        elif L[i] == 'Hollande' or L[i] == 'Mitterrand':
             liste_complete.append('François ' + L[i])
 
         elif L[i] == 'Macron':
@@ -125,3 +125,17 @@ def del_ponctuations(L):
                     elif not car in ponctuation: #si car est un caractere de ponctuation, write le caractere
                         f.write(car)
 
+def TF(ch):
+
+    list_mot=ch.split()     #sépare la chaine de caractere dans une liste
+
+    dictionnaire= {}
+
+    for i in range(len(list_mot)):  #boucle permettant de parcourir la liste mot
+        repet=0
+        for mot in list_mot:        #parcourir mot de la liste
+            if list_mot[i]==mot:    #si la valeur de la liste est mot
+                repet+=1            #incremente repet
+        dictionnaire[list_mot[i]]=repet #dictionnaire de la valeur de la liste vaut repet
+
+    return dictionnaire
