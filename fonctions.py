@@ -107,7 +107,8 @@ def TF(ch):
             if list_mot[i]==mot:    #si la valeur de la liste est mot
                 repet+=1            #incremente repet
         dictionnaire[list_mot[i]]=repet #dictionnaire de la valeur de la liste vaut repet
-    return
+    return dictionnaire
+
 def IDF(L): #Fonction calculant l'IDF
     NbTotalDoc = 0 #Initie les variables
     mots_par_document = {}
@@ -121,6 +122,50 @@ def IDF(L): #Fonction calculant l'IDF
     scores_IDF = {}  #Calcul le scoreIDF pour chaque mot
     for mot in mots_globaux:
         NbDocAvecMot = sum(mot in mots_par_document[nom_numero] for nom_numero in L) + 1
-        score_IDF = math.log(NbTotalDoc / NbDocAvecMot)
+        score_IDF = math.log(((NbTotalDoc / NbDocAvecMot)+1))
         scores_IDF[mot] = score_IDF
+
     return scores_IDF
+
+def transpose_matrice(M):
+    matrice_final=[]
+
+    l_max=0
+    for ligne in M:                 #boucle permettant d'obtenir la plus grande longueur de ligne
+        longueur = len(ligne)
+        if longueur > l_max:
+            l_max = longueur
+
+    for j in range(l_max):          #boucle range la plus grande longueur de ligne
+        L=[]
+        for i in range(len(M)):     #boucle range longueur de la matrice
+            if j < len(M[i]):       #si j < longueur de la matrice, et donc que M[j][i] existe
+                L.append(M[i][j])   #on apprend
+        matrice_final.append(L)
+
+    return matrice_final
+
+
+def TF_IDF(files_names):
+
+    liste_nom_numero = extraire_noms_avec_numero(files_names)  #liste de tout les noms avec numero
+    matrice_tf_idf = []
+
+    for i in range(len(liste_nom_numero)):  # Boucle permettant de parcourir tous les fichiers, et de calculer chaque tf-idf d'un mot dans un fichier
+        with open('cleaned/CleanedNomination_{}.txt'.format(liste_nom_numero[i]), 'r') as f:
+            contenu=f.read()
+
+        tf = TF(contenu)        #tf de ce fichier
+        idf = IDF(files_names)  #idf de tt les fichiers
+
+        L=[]
+        for mot in tf:
+            L.append((tf[mot] * idf[mot]))  #apprend le tf-idf de chaque mot de ce fichier
+        matrice_tf_idf.append(L)            #matrice, ligne: fichier, colonne: tf-idf de chaque mot du fichier
+
+    tf_idf=transpose_matrice(matrice_tf_idf)    #transpose matrice pour avoir les lignes et les colonnes inversé
+
+    return tf_idf
+
+
+
