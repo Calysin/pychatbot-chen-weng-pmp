@@ -141,6 +141,8 @@ def transpose_matrice(M):
         for i in range(len(M)):     #boucle range longueur de la matrice
             if j < len(M[i]):       #si j < longueur de la matrice, et donc que M[j][i] existe
                 L.append(M[i][j])   #on apprend
+            else:
+                L.append(None)
         matrice_final.append(L)
 
     return matrice_final
