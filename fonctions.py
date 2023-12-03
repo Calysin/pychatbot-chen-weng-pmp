@@ -209,4 +209,19 @@ def tf_idf_max(files_names):
 
     return detail_max
 
+def tf_idf_0(files_names):
+    tf_idf, liste_mot = TF_IDF(files_names)  # prend la matrice if-idf et la liste des mots, chaque ligne des 2 corresponds au même mot
+
+    L_mot_non_important=[]
+    for i in range(len(tf_idf)):
+        fichier_8=0
+        for j in range(len(tf_idf[i])):
+
+            if round(tf_idf[i][j])==0:
+                fichier_8 += 1
+
+        if fichier_8==8:
+            L_mot_non_important.append(liste_mot[i])
+
+    return L_mot_non_important
 
