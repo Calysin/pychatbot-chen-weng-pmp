@@ -197,7 +197,7 @@ def tf_idf_0(files_names):
         fichier_8=0
         for j in range(len(tf_idf[i])):
             if round(tf_idf[i][j])==0:
-                fichier_8 += 1              #si le tf-idf du mot dans un fichier est eagal à 0 on incremente la variables fichier8
+                fichier_8 += 1              #si le tf-idf du mot dans un fichier est egal à 0 on incremente la variables fichier8
         if fichier_8==8:                    #si fichier8 == 8 est donc que tt les tf-idf d'un mot dans chaque fichier vaut 0
             L_mot_non_important.append(liste_mot[i])    #la liste apprend le mot correspondant
     return L_mot_non_important
@@ -232,34 +232,76 @@ def mot_plus_repet(nom):
             liste_mot.append(mot)
     print(liste_mot)
 
-def Nation(L):
-    DicoPresidentNation = {}
+def Nation(L): #Fonction permettant de calculer
+    DicoPresidentNation = {} #Déclaration des valeurs
     ListeNomNum = extraire_noms_avec_numero(L)
     ListeNom = []
-    for k in range(len(ListeNomNum)):
+    for k in range(len(ListeNomNum)): #Boucle créant la definition contenant tous discours des présidents en clé et avec 0 en valeurs pour tous
         DicoPresidentNation[ListeNomNum[k]] = 0
-    for i in range(len(ListeNomNum)):  # Boucle permettant de parcourir les fichiers
-        compteurNation = 0
+    for i in range(len(ListeNomNum)):  #Boucle parcourant tous les fichiers
         with open('cleaned/CleanedNomination_{}.txt'.format(ListeNomNum[i]), 'r') as f:
             contenu = f.read()
             compteurNation = contenu.count("nation")
-            DicoPresidentNation[ListeNomNum[i]] = compteurNation
-    DicoPresidentNation["Chirac"] = DicoPresidentNation["Chirac1"] + DicoPresidentNation["Chirac2"]
+            DicoPresidentNation[ListeNomNum[i]] = compteurNation #Donne le nombre de fois qu'un président a dit nation en valeur de la définition
+    DicoPresidentNation["Chirac"] = DicoPresidentNation["Chirac1"] + DicoPresidentNation["Chirac2"] #Additionne les deux discours de Chirac dans la definition
     DicoPresidentNation.pop("Chirac1")
     DicoPresidentNation.pop("Chirac2")
-    DicoPresidentNation["Mitterand"] = DicoPresidentNation["Mitterrand1"] + DicoPresidentNation["Mitterrand2"]
+    DicoPresidentNation["Mitterand"] = DicoPresidentNation["Mitterrand1"] + DicoPresidentNation["Mitterrand2"] #Pareil pour Mitterrand
     DicoPresidentNation.pop("Mitterrand1")
     DicoPresidentNation.pop("Mitterrand2")
-    for item in DicoPresidentNation:
+    for item in DicoPresidentNation: #Mettre les items/clés de la définition dans une liste
         ListeNom.append(item)
-    for j in range(len(ListeNom)):
+    for j in range(len(ListeNom)): #Boucle pour supprimer les items/clés ou la valeur est 0
         if DicoPresidentNation[ListeNom[j]] == 0:
             DicoPresidentNation.pop(ListeNom[j])
-    return sorted(DicoPresidentNation.items(), key = lambda x:x[1], reverse=True)
+    return sorted(DicoPresidentNation.items(), key = lambda x:x[1], reverse=True) #Change l'affichage de la définition
 
-def ResultatNation(L):
+def ResultatNation(L): #Fonction pour afficher la définition sans le nombre de fois que les presidents disent nation et proprement dans une liste
     ListePresidentNation = []
     for i, j in Nation(L):
         ListePresidentNation.append(i)
     return ListePresidentNation
+
+def PremierClimat(L):
+    ListeNomNum = extraire_noms_avec_numero(L)
+    MinimalLigne = 5412
+    StockLigne = 5462
+    for i in range(len(ListeNomNum)):  #Boucle parcourant tous les fichiers
+        with open('cleaned/CleanedNomination_{}.txt'.format(ListeNomNum[i]), 'r') as f:
+            contenu = f.readlines()
+            NumeroLigne = 1
+            for ligne in contenu:
+                mots = ligne.split()  #Séparer les mots dans les lignes
+                NumeroMot = 1
+                for mot in mots:
+                    if mot == "climat":
+                        StockLigne = min(StockLigne, NumeroLigne)
+                    NumeroMot += 1
+                NumeroLigne += 1
+        if MinimalLigne >= StockLigne:
+            MinimalLigne = StockLigne
+            PremierPresidentClimat = ListeNomNum[i]
+    return PremierPresidentClimat
+
+def PremierEcologie(L):
+    ListeNomNum = extraire_noms_avec_numero(L)
+    PremierPresidentEcologie = None
+    MinimalLigne = 5412
+    StockLigne = 5462
+    for i in range(len(ListeNomNum)):  #Boucle parcourant tous les fichiers
+        with open('cleaned/CleanedNomination_{}.txt'.format(ListeNomNum[i]), 'r') as f:
+            contenu = f.readlines()
+            NumeroLigne = 1
+            for ligne in contenu:
+                mots = ligne.split()  #Séparer les mots dans les lignes
+                NumeroMot = 1
+                for mot in mots:
+                    if mot == "écologie":
+                        StockLigne = min(StockLigne, NumeroLigne)
+                    NumeroMot += 1
+                NumeroLigne += 1
+        if MinimalLigne >= StockLigne:
+            MinimalLigne = StockLigne
+            PremierPresidentEcologie = ListeNomNum[i]
+    return PremierPresidentEcologie
 
