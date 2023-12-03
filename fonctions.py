@@ -108,6 +108,7 @@ def TF(ch):
             if list_mot[i]==mot:    #si la valeur de la liste est mot
                 repet+=1            #incremente repet
         dictionnaire[list_mot[i]]=repet #dictionnaire de la valeur de la liste vaut repet
+
     return dictionnaire
 
 def IDF(L): #Fonction calculant l'IDF
@@ -125,7 +126,6 @@ def IDF(L): #Fonction calculant l'IDF
         NbDocAvecMot = sum(mot in mots_par_document[nom_numero] for nom_numero in L) + 1
         score_IDF = math.log(((NbTotalDoc / NbDocAvecMot)+1))
         scores_IDF[mot] = score_IDF
-
     return scores_IDF
 
 def transpose_matrice(M):
@@ -146,7 +146,6 @@ def TF_IDF(files_names):
     liste_nom_numero = extraire_noms_avec_numero(files_names)  #liste de tout les noms avec numero
     matrice_tf_idf = []
     mot_tf = []
-    liste_mot=[]
 
     for i in range(len(liste_nom_numero)):  # Boucle permettant de parcourir tous les fichiers, et de calculer chaque tf-idf d'un mot dans un fichier
 
@@ -170,9 +169,9 @@ def TF_IDF(files_names):
         L=[]
 
         for mot in mot_tf:
+
             if mot in tf:
                 L.append((tf[mot] * idf[mot]))  #apprend le tf-idf de chaque mot de ce fichier
-                liste_mot.append(mot)
             else:
                 L.append(0)                     #si le mot n'existe pas dans ce fichier = 0
 
@@ -180,26 +179,34 @@ def TF_IDF(files_names):
 
     tf_idf=transpose_matrice(matrice_tf_idf)    #transpose matrice pour avoir les lignes et les colonnes inversé
 
-    return tf_idf, liste_mot
+    return tf_idf, mot_tf
 
 def tf_idf_max(files_names):
 
     tf_idf, liste_mot = TF_IDF(files_names)     #prend la matrice if-idf et la liste des mots, chaque ligne des 2 corresponds au même mot
-    nom_fichier = extraire_noms_avec_numero(files_names)  # liste de tout les noms avec numero
 
-    tfidf_max=tf_idf[0][0]              #initialise une valeur a tt ces variables pour pouvoir trouver le max
+    tfidf_max = 0
+    for i in range(8):
+        tfidf_max += tf_idf[0][i]              #initialise une valeur a tt ces variables pour pouvoir trouver le max
     mot = liste_mot[0]
-    fichier = nom_fichier[0]            #et leurs mots et fichiers correspondant
-    for i in range(len(tf_idf)):
-        for j in range(len(tf_idf[i])):
-            if tf_idf[i][j]>tfidf_max:
-                tfidf_max=tf_idf[i][j]
-                mot = liste_mot[i]
-                fichier = nom_fichier[j]
 
-    detail_max=[tfidf_max, mot, fichier] # liste ave l[0]=le plus grand tf-idf, l[1]=le mot correspondant et l[2]=le fichier correspondant
+
+    for i in range(len(tf_idf)):
+        somme_tfidf=0
+
+        for j in range(len(tf_idf[i])):
+            somme_tfidf += tf_idf[i][j]
+
+        if tfidf_max<somme_tfidf:
+
+            print(tfidf_max, somme_tfidf, mot)
+
+            tfidf_max=somme_tfidf
+            mot = liste_mot[i]
+
+
+    detail_max=[tfidf_max, mot]   # liste avec l[0]=le plus grand tf-idf, l[1]=le mot correspondant et l[2]=le fichier correspondant
 
     return detail_max
-
 
 
