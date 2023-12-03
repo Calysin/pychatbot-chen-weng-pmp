@@ -27,7 +27,7 @@ functionality = input("A quelle fonctionnalité voulez-vous accéder ? ")
 if functionality == "1":
     tf_idf, liste_mot = (TF_IDF(files_names))
 if functionality == "2":
-    print("Le mot avec le tf-idf le plus élevé de tout les dicours est: ", tf_idf_max(files_names))
+    print("Le mot avec le tf-idf le plus élevé de tout les discours est: ", tf_idf_max(files_names))
 if functionality == "3":
     nom = input("Entrer le nom d'un president dont vous souhaitez connaître le mot le plus répéter dans ses discours : ")
     mot_plus_repet(nom)
