@@ -238,7 +238,7 @@ def tf_idf_0(files_names):
 def mot_plus_repet(nom):
     list_nom=[]
 
-    if nom=='Chirac' or nom=='Mitterrand':
+    if nom=='Chirac' or nom=='Mitterrand':  #si c chirac ou mitterrand on prend en compte le fait qu'ils ont 2 discours
         nom1 = nom+'1'
         nom2 = nom+'2'
         list_nom.append(nom1)
