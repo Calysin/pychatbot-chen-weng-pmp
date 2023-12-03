@@ -11,6 +11,12 @@ print_noms(prenom_n)
 ConversionMajusculeEnMinuscule(files_names)
 del_ponctuations(files_names)
 
-x=(TF_IDF(files_names))
+x, y = (TF_IDF(files_names))
+
+i=0
 for ligne in x:
+    print(y[i], end="")
     print(ligne)
+    i+=1
+
+print(tf_idf_max(files_names))
