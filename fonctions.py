@@ -196,6 +196,7 @@ def tf_idf_0(files_names):
     for i in range(len(tf_idf)):
         fichier_8=0
         for j in range(len(tf_idf[i])):
+            print(round(tf_idf[i][j]), tf_idf[i][j] )
             if round(tf_idf[i][j])==0:
                 fichier_8 += 1              #si le tf-idf du mot dans un fichier est egal à 0 on incremente la variables fichier8
         if fichier_8==8:                    #si fichier8 == 8 est donc que tt les tf-idf d'un mot dans chaque fichier vaut 0

@@ -22,24 +22,28 @@ menu = print("1 - Afficher la liste des mots les moins importants dans le corpus
 
 print("Pour accéder aux fonctionnalités, veuillez écrire les numéros auxquels elles correspondent")
 
-n = int(input("Combien de fonctionnalités voulez-vous tester ? "))
-
-for i in range (n):
+recommencer=1
+while recommencer==1:
     functionality = input("A quelle fonctionnalité voulez-vous accéder ? ")
     if functionality == "1":
         print("Celui-ci est en cours de developpement")
-    if functionality == "2":
+    elif functionality == "2":
         print("Le mot avec le tf-idf le plus élevé de tout les discours est: ", tf_idf_max(files_names))
-    if functionality == "3":
+    elif functionality == "3":
         nom = input("Entrer le nom d'un president dont vous souhaitez connaître le mot le plus répéter dans ses discours : ")
         mot_plus_repet(nom)
-    if functionality == "4":
+    elif functionality == "4":
         print("Les présidents ayant dit nation sont:", ResultatNation(files_names))
         print("Le président l'ayant le plus dit est:", ResultatNation(files_names)[0])
-    if functionality == "5":
+    elif functionality == "5":
         print("Le premier président ayant dit climat est", PremierClimat(files_names))
         print("Le premier présidant ayant dit écologie est", PremierEcologie(files_names))
-    if functionality == "6":
+    elif functionality == "6":
         print("Celui-ci est encore en cours de developpement")
-    if functionality >= "7":
+    elif functionality >= "7":
         print("Nous ne faisons pas autant de fonctionnalité pour le moment")
+
+    print("Souhaitez vous utiliser d'autre fonctionnalité?")
+
+    recommencer=int(input("0 : Non\n"
+                          "1 : Oui\n"))
