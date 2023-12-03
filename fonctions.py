@@ -182,14 +182,24 @@ def TF_IDF(files_names):
 
     return tf_idf, liste_mot
 
+def tf_idf_max(files_names):
 
+    tf_idf, liste_mot = TF_IDF(files_names)     #prend la matrice if-idf et la liste des mots, chaque ligne des 2 corresponds au même mot
+    nom_fichier = extraire_noms_avec_numero(files_names)  # liste de tout les noms avec numero
 
+    tfidf_max=tf_idf[0][0]              #initialise une valeur a tt ces variables pour pouvoir trouver le max
+    mot = liste_mot[0]
+    fichier = nom_fichier[0]            #et leurs mots et fichiers correspondant
+    for i in range(len(tf_idf)):
+        for j in range(len(tf_idf[i])):
+            if tf_idf[i][j]>tfidf_max:
+                tfidf_max=tf_idf[i][j]
+                mot = liste_mot[i]
+                fichier = nom_fichier[j]
 
+    detail_max=[tfidf_max, mot, fichier] # liste ave l[0]=le plus grand tf-idf, l[1]=le mot correspondant et l[2]=le fichier correspondant
 
-
-
-
-
+    return detail_max
 
 
 
