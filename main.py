@@ -13,13 +13,8 @@ del_ponctuations(files_names)
 
 
 tf_idf, liste_mot = (TF_IDF(files_names))
-i=0
-for ligne in tf_idf:
-    somme=0
-    if liste_mot[i]=='la' or liste_mot[i]=='de':
-        for val in ligne:
-            somme+=val
-        print(i, liste_mot[i], ligne, somme)
-    i+=1
 
-print(tf_idf_max(files_names))
+print("Le mot avec le tf-idf le plus élevé de tout les discours est: ", tf_idf_max(files_names))
+
+nom=str(input("Entrer le nom d'un president dont vous souhaitez connaître le mot le plus répéter dans ses discours : "))
+mot_plus_repet(nom)
