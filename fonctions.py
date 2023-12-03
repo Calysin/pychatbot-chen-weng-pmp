@@ -58,6 +58,7 @@ def print_noms(L):  #Fonction affichant les nom et prénoms des présidents obte
 
 def extraire_noms_avec_numero(L): #Fonction qui extrait les noms des présidents avec les numéros cette fois-ci
     liste=[]
+
     for i in range(len(L)):         #obtenir nom avec numero
         nom = str()
         start = 0
@@ -89,9 +90,9 @@ def del_ponctuations(L): #Fonction supprimant la ponctuation
     special=["'", '"', '-']
     liste_nom_numero= extraire_noms_avec_numero(L) #Créer une variable appelant la fonction extraire_noms_avec_numero
     for i in range(len(liste_nom_numero)): #Boucle permettant de parcourir tous les fichiers
-        with open('cleaned/CleanedNomination_{}.txt'.format(liste_nom_numero[i]), 'r')as f:
+        with open('cleaned/CleanedNomination_{}.txt'.format(liste_nom_numero[i]), 'r', encoding="utf-8")as f:
             contenu=f.readlines()
-        with open('cleaned/CleanedNomination_{}.txt'.format(liste_nom_numero[i]), 'w')as f:
+        with open('cleaned/CleanedNomination_{}.txt'.format(liste_nom_numero[i]), 'w', encoding="utf-8")as f:
             for ligne in contenu: #Supprime tous les caractères devant l'être ou les remplaces par un espace
                 for car in ligne:
                     if car in special:
@@ -114,7 +115,7 @@ def IDF(L): #Fonction calculant l'IDF
     mots_par_document = {}
     mots_globaux = set()
     for nom_numero in L: #Compte le nombre de documents et mots
-        with open(f"cleaned/Cleaned{nom_numero}", "r") as f:
+        with open(f"cleaned/Cleaned{nom_numero}", "r", encoding="utf-8") as f:
             contenu = f.read().split()
             NbTotalDoc += 1
             mots_par_document[nom_numero] = set(contenu)
@@ -130,19 +131,11 @@ def IDF(L): #Fonction calculant l'IDF
 def transpose_matrice(M):
     matrice_final=[]
 
-    l_max=0
-    for ligne in M:                 #boucle permettant d'obtenir la plus grande longueur de ligne
-        longueur = len(ligne)
-        if longueur > l_max:
-            l_max = longueur
-
-    for j in range(l_max):          #boucle range la plus grande longueur de ligne
+    for j in range(len(M[0])):          #boucle range la plus grande longueur de ligne
         L=[]
         for i in range(len(M)):     #boucle range longueur de la matrice
-            if j < len(M[i]):       #si j < longueur de la matrice, et donc que M[j][i] existe
-                L.append(M[i][j])   #on apprend
-            else:
-                L.append(None)
+            L.append(M[i][j])   #on apprend
+
         matrice_final.append(L)
 
     return matrice_final
@@ -152,22 +145,51 @@ def TF_IDF(files_names):
 
     liste_nom_numero = extraire_noms_avec_numero(files_names)  #liste de tout les noms avec numero
     matrice_tf_idf = []
+    mot_tf = []
+    liste_mot=[]
 
     for i in range(len(liste_nom_numero)):  # Boucle permettant de parcourir tous les fichiers, et de calculer chaque tf-idf d'un mot dans un fichier
-        with open('cleaned/CleanedNomination_{}.txt'.format(liste_nom_numero[i]), 'r') as f:
+
+        with open('cleaned/CleanedNomination_{}.txt'.format(liste_nom_numero[i]), 'r', encoding="utf-8") as f:
+            contenu = f.read()
+
+        tf = TF(contenu)
+
+        for mot in tf:              #en dehors de la 2eme i boucle pour éviter que la premiere colonne ne correspond pas au fichier
+            if mot not in mot_tf:
+                mot_tf.append(mot)  #liste contenant tt les mots sans doublon et gardant le meme ordre
+
+
+    for i in range(len(liste_nom_numero)):  # Boucle permettant de parcourir tous les fichiers, et de calculer chaque tf-idf d'un mot dans un fichier
+        with open('cleaned/CleanedNomination_{}.txt'.format(liste_nom_numero[i]), 'r', encoding="utf-8") as f:
             contenu=f.read()
 
         tf = TF(contenu)        #tf de ce fichier
         idf = IDF(files_names)  #idf de tt les fichiers
 
         L=[]
-        for mot in tf:
-            L.append((tf[mot] * idf[mot]))  #apprend le tf-idf de chaque mot de ce fichier
+
+        for mot in mot_tf:
+            if mot in tf:
+                L.append((tf[mot] * idf[mot]))  #apprend le tf-idf de chaque mot de ce fichier
+                liste_mot.append(mot)
+            else:
+                L.append(0)                     #si le mot n'existe pas dans ce fichier = 0
+
         matrice_tf_idf.append(L)            #matrice, ligne: fichier, colonne: tf-idf de chaque mot du fichier
 
     tf_idf=transpose_matrice(matrice_tf_idf)    #transpose matrice pour avoir les lignes et les colonnes inversé
 
-    return tf_idf
+    return tf_idf, liste_mot
+
+
+
+
+
+
+
+
+
 
 
 
