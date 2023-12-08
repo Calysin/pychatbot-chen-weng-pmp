@@ -311,3 +311,22 @@ def PremierEcologie(L):
             PremierPresidentEcologie = ListeNomNum[i]
     return PremierPresidentEcologie
 
+def find_word_in_corpus(question, files_names):
+    l_mot_question=CleanedQuestion(question)
+    l_mots_fichiers=[]
+    liste_nom_numero = extraire_noms_avec_numero(files_names)  #liste de tout les noms avec numero
+
+    for i in range(len(liste_nom_numero)):  # Boucle permettant de parcourir tous les fichiers, et de calculer chaque tf-idf d'un mot dans un fichier
+        with open('cleaned/CleanedNomination_{}.txt'.format(liste_nom_numero[i]), 'r', encoding="utf-8") as f:
+            contenu= f.readlines().split()
+            l_mots_fichiers.append(contenu)
+
+        for i in range(len(l_mot_question)):
+            if l_mot_question[i] not in l_mots_fichiers:
+                del(l_mot_question[i])
+
+        return l_mot_question
+
+
+
+
