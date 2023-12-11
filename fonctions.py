@@ -122,8 +122,8 @@ def IDF(L): #Fonction calculant l'IDF
             mots_globaux.update(contenu)
     scores_IDF = {}  #Calcul le scoreIDF pour chaque mot
     for mot in mots_globaux:
-        NbDocAvecMot = sum(mot in mots_par_document[nom_numero] for nom_numero in L) + 1
-        score_IDF = math.log(((NbTotalDoc / NbDocAvecMot)+1))
+        NbDocAvecMot = sum(mot in mots_par_document[nom_numero] for nom_numero in L)
+        score_IDF = math.log10(NbTotalDoc / NbDocAvecMot)
         scores_IDF[mot] = score_IDF
     return scores_IDF
 
@@ -155,55 +155,56 @@ def TF_IDF(files_names):
         L=[]
         for mot in mot_tf:
             if mot in tf:
-                L.append((tf[mot] * idf[mot]))  #apprend le tf-idf de chaque mot de ce fichier
+                L.append(round(tf[mot] * idf[mot], 2))  #apprend le tf-idf de chaque mot de ce fichier
             else:
                 L.append(0)                     #si le mot n'existe pas dans ce fichier = 0
         matrice_tf_idf.append(L)            #matrice, ligne: fichier, colonne: tf-idf de chaque mot du fichier
     tf_idf=transpose_matrice(matrice_tf_idf)    #transpose matrice pour avoir les lignes et les colonnes inversé
     return tf_idf, mot_tf
 
-def tf_idf_max(files_names):            #retourne dictionnaire des mots avec les plus grans tf-idf
-    tf_idf, liste_mot = TF_IDF(files_names)     #prend la matrice if-idf et la liste des mots, chaque ligne des 2 corresponds au même mot
-    tmp_val = 0
-    for i in range(8):
-        tmp_val += tf_idf[0][i]              #initialise une valeur a tt ces variables pour pouvoir trouver le max
-    mot = [liste_mot[0]]
-    tfidf_max=[]
-    tfidf_max.append(tmp_val)                  #liste apprend cette valeur
-    for i in range(len(tf_idf)):
-        somme_tfidf=0
-        for j in range(len(tf_idf[i])):
-            somme_tfidf += tf_idf[i][j]                 #calcul somme tf-idf d'un mot
-        if tmp_val<somme_tfidf:                       #si cette somme est plus grande que tfidf_max
-            tfidf_max=[]
-            tfidf_max.append(somme_tfidf)               #tfidf_max devient cette somme
-            tmp_val=somme_tfidf
-            mot=[]
-            mot.append(liste_mot[i])                         #on stock le mot correspondant
-        elif tfidf_max==somme_tfidf: #apprendre une autre variable dans la liste si elle a autant de repetition que le(s) mot(s) deja stocker
-            tfidf_max.append(somme_tfidf)  # tfidf_max devient cette somme
-            mot.append(liste_mot[i])
-    detail_max={}
-    val=0
-    for m in mot:
-        detail_max[m]=tfidf_max[val]   #dico avec le plus grand tf-idf et le mot correspondant
-        val+=1
-    return detail_max
 
 def tf_idf_0(files_names):
     tf_idf, liste_mot = TF_IDF(files_names) # prend la matrice if-idf et la liste des mots, chaque ligne des 2 corresponds au même mot
     L_mot_non_important=[]                  #creer liste qui va stocker les mots les moins important
+
     for i in range(len(tf_idf)):
         fichier_8=0
         for j in range(len(tf_idf[i])):
-            print(round(tf_idf[i][j]), tf_idf[i][j] )
-            if round(tf_idf[i][j])==0:
+
+            if tf_idf[i][j]==0:
                 fichier_8 += 1              #si le tf-idf du mot dans un fichier est egal à 0 on incremente la variables fichier8
         if fichier_8==8:                    #si fichier8 == 8 est donc que tt les tf-idf d'un mot dans chaque fichier vaut 0
             L_mot_non_important.append(liste_mot[i])    #la liste apprend le mot correspondant
+
     return L_mot_non_important
 
-def mot_plus_repet(nom):
+def tf_idf_max(files_names):            #retourne dictionnaire des mots avec les plus grans tf-idf
+    tf_idf, liste_mot = TF_IDF(files_names)     #prend la matrice if-idf et la liste des mots, chaque ligne des 2 corresponds au même mot
+
+    tmp_val = 0
+    tfidf_max=[]
+    mot=[]
+
+
+    for i in range(len(tf_idf)):
+
+        for j in range(len(tf_idf[i])):
+            if tmp_val<tf_idf[i][j]:                       #si cette somme est plus grande que tfidf_max
+                tfidf_max=[]
+                tfidf_max.append(tf_idf[i][j])               #tfidf_max devient cette somme
+                tmp_val=tf_idf[i][j]
+
+                mot=[]
+                mot.append(liste_mot[i])                         #on stock le mot correspondant
+
+            elif tmp_val==tf_idf[i][j]: #apprendre une autre variable dans la liste si elle a autant de repetition que le(s) mot(s) deja stocker
+                tfidf_max.append(tf_idf[i][j])  # tfidf_max devient cette somme
+                mot.append(liste_mot[i])
+
+    return mot
+
+
+def mot_plus_repet(nom, files_names):
     list_nom=[]
     if nom=='Chirac' or nom=='Mitterrand':  #si c chirac ou mitterrand on prend en compte le fait qu'ils ont 2 discours
         nom1 = nom+'1'
@@ -212,6 +213,7 @@ def mot_plus_repet(nom):
         list_nom.append(nom2)
     else:
         list_nom.append(nom)
+
     dictionnaire={}
     for i in range(len(list_nom)):  # Boucle permettant de parcourir les fichiers
         with open('cleaned/CleanedNomination_{}.txt'.format(list_nom[i]), 'r', encoding="utf-8") as f:
@@ -222,14 +224,17 @@ def mot_plus_repet(nom):
                 dictionnaire[mot] += tf[mot]    #si le mot est dans dictionnaire, on ajouter juste la valeur d'occurence du mot à celle existante
             else:
                 dictionnaire[mot] = tf[mot]     #sinon dictionnaire apprend ce mot et sa valeur
+
     liste_mot=[mot]             #prend un mot et sa valeur au pif pour pouvoir comparer
     mot_plus=dictionnaire[mot]
+    mot_non_imp=tf_idf_0(files_names)
+
     for mot in dictionnaire:
-        if dictionnaire[mot] > mot_plus:    #si le mot à une plus grande valeur que celle stoker
+        if dictionnaire[mot] > mot_plus and mot not in mot_non_imp:    #si le mot à une plus grande valeur que celle stoker
             liste_mot=[]                    #on supprime ceux stocker
             liste_mot.append(mot)           #et on apprend le nouveau mot et sa valeur
             mot_plus = dictionnaire[mot]
-        elif dictionnaire[mot] == mot_plus: #apprendre une autre variable dans la liste si elle a autant de repetition que le(s) mot(s) deja stocker
+        elif dictionnaire[mot] == mot_plus and mot not in mot_non_imp: #apprendre une autre variable dans la liste si elle a autant de repetition que le(s) mot(s) deja stocker
             liste_mot.append(mot)
     print(liste_mot)
 
