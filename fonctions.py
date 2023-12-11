@@ -8,7 +8,6 @@ def list_of_files(directory, extension): #Code donné pour le projet permettant 
             files_names.append(filename)
     return files_names
 
-
 def extraire_noms_presidents(L): #Fonction permettant d'extraire les noms des présidents sans nombre
     liste=[] #Liste stockant les noms des présidents extrait
     for i in range(len(L)): #Boucle obtenant les noms avec les numeros
@@ -112,18 +111,18 @@ def TF(ch):
 
 def IDF(L): #Fonction calculant l'IDF
     NbTotalDoc = 0 #Initie les variables
-    mots_par_document = {}
-    mots_globaux = set()
-    for nom_numero in L: #Compte le nombre de documents et mots
-        with open(f"cleaned/Cleaned{nom_numero}", "r", encoding="utf-8") as f:
-            contenu = f.read().split()
+    MotParDoc = {}
+    MotTotal = set()
+    for NomNum in L: #Pour tous les fichiers dans L
+        with open("cleaned/Cleaned{NomNum}", "r", encoding="utf-8") as f: #Ouvre le fichier en mode lecture
+            contenu = f.read().split() #Prends chaque mot dans le contenu
             NbTotalDoc += 1
-            mots_par_document[nom_numero] = set(contenu)
-            mots_globaux.update(contenu)
-    scores_IDF = {}  #Calcul le scoreIDF pour chaque mot
-    for mot in mots_globaux:
-        NbDocAvecMot = sum(mot in mots_par_document[nom_numero] for nom_numero in L) + 1
-        score_IDF = math.log(((NbTotalDoc / NbDocAvecMot)+1))
+            MotParDoc[NomNum] = set(contenu)
+            MotTotal.update(contenu)
+    scores_IDF = {}  # Calcul le scoreIDF pour chaque mot dans une def
+    for mot in MotTotal:
+        NbDocAvecMot = sum(mot in MotParDoc[NomNum] for NomNum in L)
+        score_IDF = math.log(NbTotalDoc / NbDocAvecMot) #Calcul de l'IDF avec la formule donnée
         scores_IDF[mot] = score_IDF
     return scores_IDF
 
@@ -277,11 +276,14 @@ def PremierClimat(L):
                 for mot in mots:
                     if mot == "climat":
                         StockLigne = min(StockLigne, NumeroLigne)
+                        StockMot = min(StockMot, NumeroMot)
                     NumeroMot += 1
                 NumeroLigne += 1
         if MinimalLigne >= StockLigne:
             MinimalLigne = StockLigne
-            PremierPresidentClimat = ListeNomNum[i]
+            if MinimalMot >= StockMot:
+                MinimalLigne = StockMot
+                PremierPresidentClimat = ListeNomNum[i]
     return PremierPresidentClimat
 
 def PremierEcologie(L):
@@ -306,3 +308,31 @@ def PremierEcologie(L):
             PremierPresidentEcologie = ListeNomNum[i]
     return PremierPresidentEcologie
 
+#PARTIE 2
+
+def CleanedQuestion(char):
+    ponctuation = ['!', ':', ";", '?', '.', ',', '(', ')', '{', '}', '[', ']']  # Liste de caractère devant être supprimé ou remplacé par un espace
+    special = ["'", '"', '-']
+    L = char.split()
+    LQuestionPropre = []
+    for i in range (len(L)):
+        mot = ""
+        for lettre in L[i]:
+            if 65 <= ord(lettre) <= 90:
+                StockageLettre = lettre.lower()
+                mot += StockageLettre
+            else:
+                StockageLettre = lettre
+                mot += StockageLettre
+        LQuestionPropre.append(mot)
+    print(LQuestionPropre)
+
+    LQuestionPropre2 = []
+    for mot in LQuestionPropre:
+        mot2 = ""
+        for lettre in mot:
+            if lettre not in ponctuation and lettre not in special:
+                mot2 += lettre
+        if mot2:
+            LQuestionPropre2.append(mot2)
+    print(LQuestionPropre2)
