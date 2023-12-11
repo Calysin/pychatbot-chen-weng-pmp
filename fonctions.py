@@ -311,3 +311,31 @@ def PremierEcologie(L):
             PremierPresidentEcologie = ListeNomNum[i]
     return PremierPresidentEcologie
 
+#PARTIE 2
+
+def CleanedQuestion(char):
+    ponctuation = ['!', ':', ";", '?', '.', ',', '(', ')', '{', '}', '[', ']']  # Liste de caractère devant être supprimé ou remplacé par un espace
+    special = ["'", '"', '-']
+    L = char.split()
+    LQuestionPropre = []
+    for i in range (len(L)):
+        mot = ""
+        for lettre in L[i]:
+            if 65 <= ord(lettre) <= 90:
+                StockageLettre = lettre.lower()
+                mot += StockageLettre
+            else:
+                StockageLettre = lettre
+                mot += StockageLettre
+        LQuestionPropre.append(mot)
+    print(LQuestionPropre)
+
+    LQuestionPropre2 = []
+    for mot in LQuestionPropre:
+        mot2 = ""
+        for lettre in mot:
+            if lettre not in ponctuation and lettre not in special:
+                mot2 += lettre
+        if mot2:
+            LQuestionPropre2.append(mot2)
+    print(LQuestionPropre2)

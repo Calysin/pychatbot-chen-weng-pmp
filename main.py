@@ -5,6 +5,9 @@ directory = "./speeches"
 files_names = list_of_files(directory, "txt")
 #fils names correspond a une liste contenant tous les noms de fichiers
 
+Question = input("Donnez moi votre question ? ")
+CleanedQuestion(Question)
+
 print("Bienvenue dans le pychatbot en developpement ! \n")
 print("Nos informations concernent les discours de ces présidents: ")
 noms = (extraire_noms_presidents(files_names))
