@@ -340,7 +340,7 @@ def CleanedQuestion(char):
                 mot2 += lettre
         if mot2:
             LQuestionPropre2.append(mot2)
-    print(LQuestionPropre2)
+
     return LQuestionPropre2
 
 
