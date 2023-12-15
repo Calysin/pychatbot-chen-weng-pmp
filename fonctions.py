@@ -136,6 +136,8 @@ def transpose_matrice(M):
         matrice_final.append(L)
     return matrice_final
 
+
+
 def TF_IDF(files_names):
     liste_nom_numero = extraire_noms_avec_numero(files_names)  #liste de tout les noms avec numero
     matrice_tf_idf = []
@@ -158,7 +160,8 @@ def TF_IDF(files_names):
                 L.append(round(tf[mot] * idf[mot], 2))  #apprend le tf-idf de chaque mot de ce fichier
             else:
                 L.append(0)                     #si le mot n'existe pas dans ce fichier = 0
-        matrice_tf_idf.append(L)            #matrice, ligne: fichier, colonne: tf-idf de chaque mot du fichier
+        matrice_tf_idf.append(L)                #matrice, ligne: fichier, colonne: tf-idf de chaque mot du fichier
+
     tf_idf=transpose_matrice(matrice_tf_idf)    #transpose matrice pour avoir les lignes et les colonnes inversé
     return tf_idf, mot_tf
 
@@ -311,6 +314,36 @@ def PremierEcologie(L):
             PremierPresidentEcologie = ListeNomNum[i]
     return PremierPresidentEcologie
 
+#PARTIE 2
+
+def CleanedQuestion(char):
+    ponctuation = ['!', ':', ";", '?', '.', ',', '(', ')', '{', '}', '[', ']']  # Liste de caractère devant être supprimé ou remplacé par un espace
+    special = ["'", '"', '-']
+    L = char.split()
+    LQuestionPropre = []
+    for i in range (len(L)):
+        mot = ""
+        for lettre in L[i]:
+            if 65 <= ord(lettre) <= 90:
+                StockageLettre = lettre.lower()
+                mot += StockageLettre
+            else:
+                StockageLettre = lettre
+                mot += StockageLettre
+        LQuestionPropre.append(mot)
+
+    LQuestionPropre2 = []
+    for mot in LQuestionPropre:
+        mot2 = ""
+        for lettre in mot:
+            if lettre not in ponctuation and lettre not in special:
+                mot2 += lettre
+        if mot2:
+            LQuestionPropre2.append(mot2)
+    print(LQuestionPropre2)
+    return LQuestionPropre2
+
+
 def find_word_in_corpus(question, files_names):
     l_mot_question=CleanedQuestion(question)
     l_mots_fichiers=[]
@@ -318,15 +351,38 @@ def find_word_in_corpus(question, files_names):
 
     for i in range(len(liste_nom_numero)):  # Boucle permettant de parcourir tous les fichiers, et de calculer chaque tf-idf d'un mot dans un fichier
         with open('cleaned/CleanedNomination_{}.txt'.format(liste_nom_numero[i]), 'r', encoding="utf-8") as f:
-            contenu= f.readlines().split()
-            l_mots_fichiers.append(contenu)
+            contenu= f.read().split()       #liste contenu de tt les mots des fichiers
+            for mot in contenu:             #boucle pour eviter matrice
+                l_mots_fichiers.append(mot) #liste mots tt fichiers apprend chaque mot de la liste contenu
 
-        for i in range(len(l_mot_question)):
-            if l_mot_question[i] not in l_mots_fichiers:
-                del(l_mot_question[i])
+    j = int(0)                              #variables j pour eviter de depasser len(l) a cause du del
+    for i in range(len(l_mot_question)):
+        if l_mot_question[j] not in l_mots_fichiers:    #si le mot de la question n'existe pas dans les fichiers on le supprime
+            del(l_mot_question[j])
+            j-=1
+        j+=1
 
-        return l_mot_question
+    return l_mot_question
 
+def TF_IDF_question(question, files_names):
+    liste_mots_questions=find_word_in_corpus(question, files_names) #liste mots de la question
+    idf=IDF(files_names)                                            #idf de tt les mots des fichiers
 
+    tf={}
+    tf_idf=[]
 
+    tf_idf_tt, mot_tf_tt=TF_IDF(files_names)
 
+    for i in range(len(liste_mots_questions)):  #dico avec repet des mots de la question
+        if liste_mots_questions[i] not in tf:
+            tf[liste_mots_questions[i]]=1
+        else:
+            tf[liste_mots_questions[i]]+=1
+
+    for mot in mot_tf_tt:
+        if mot in tf:
+            tf_idf.append(round(tf[mot]*idf[mot], 2))
+        else:
+            tf_idf.append(0)
+
+    return tf_idf
