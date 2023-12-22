@@ -123,7 +123,7 @@ def IDF(L): #Fonction calculant l'IDF
     scores_IDF = {}  #Calcul le scoreIDF pour chaque mot
     for mot in mots_globaux:
         NbDocAvecMot = sum(mot in mots_par_document[nom_numero] for nom_numero in L)
-        score_IDF = math.log10(NbTotalDoc / NbDocAvecMot)
+        score_IDF = log10(NbTotalDoc / NbDocAvecMot)
         scores_IDF[mot] = score_IDF
     return scores_IDF
 
@@ -412,8 +412,8 @@ def CalculSimilaritéCFinal(AM, BL): #Cacul du score de smilarité
   
 def calcul_doc_plus_pert(question, files_names):
     liste_nom_numero=extraire_noms_avec_numero(files_names)
-    matrice_tf_idf=TF_IDF(files_names)
-    vecteur_tf_idf_question=TF_IDF_question(question)
+    matrice_tf_idf, vide =TF_IDF(files_names)
+    vecteur_tf_idf_question=TF_IDF_question(question, files_names)
 
     M_tf_idf=transpose_matrice(matrice_tf_idf)      #transposé de la matrice tf idf pour avoir des lignes qui correspond aux fichiers
 
