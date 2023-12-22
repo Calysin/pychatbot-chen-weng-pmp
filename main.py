@@ -5,6 +5,17 @@ directory = "./speeches"
 files_names = list_of_files(directory, "txt")
 #fils names correspond a une liste contenant tous les noms de fichiers
 
+M = [
+    [1, 2, 3, 4],
+    [1, 2, 3, 4]
+]
+
+L = [1, 2, 3, 4]
+
+print(CalculSimilaritéAProduitScalaire(M, L))
+print(CalculSimilaritéBNormeVecteur(L))
+print(CalculSimilaritéCFinal(M, L))
+
 Question = input("Donnez moi votre question ? ")
 CleanedQuestion(Question)
 

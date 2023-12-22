@@ -1,6 +1,6 @@
 #Import des bibliothèques
 import os
-import math
+from math import *
 def list_of_files(directory, extension): #Code donné pour le projet permettant d'obtenir les fichiers
     files_names = []
     for filename in os.listdir(directory):
@@ -328,8 +328,6 @@ def CleanedQuestion(char):
                 StockageLettre = lettre
                 mot += StockageLettre
         LQuestionPropre.append(mot)
-    print(LQuestionPropre)
-
     LQuestionPropre2 = []
     for mot in LQuestionPropre:
         mot2 = ""
@@ -339,3 +337,31 @@ def CleanedQuestion(char):
         if mot2:
             LQuestionPropre2.append(mot2)
     print(LQuestionPropre2)
+
+def CalculSimilaritéAProduitScalaire(AM, BL):
+    ProduitScalaireAB = 0
+    for i in range(len(AM)):
+        for j in range(len(AM[i])):
+            ProduitScalaireAB += AM[i][j] * BL[j]
+    return ProduitScalaireAB
+
+
+def CalculSimilaritéBNormeVecteur(A):
+    NormeA = 0
+    if isinstance(A, list) and isinstance(A[0], list) == True:
+        for i in range(len(A)):
+            for j in range(len(A[i])):
+                NormeA += A[i][j] ** 2
+        NormeA = sqrt(NormeA)
+    else:
+        for i in range(len(A)):
+            NormeA += A[i]**2
+        NormeA = sqrt(NormeA)
+    return NormeA
+
+def CalculSimilaritéCFinal(AM, BL):
+    ProduitScalaireAB = CalculSimilaritéAProduitScalaire(AM, BL)
+    NormeAM = CalculSimilaritéBNormeVecteur(AM)
+    NormeBL = CalculSimilaritéBNormeVecteur(BL)
+    ScoreSimilarité = ProduitScalaireAB / (NormeAM * NormeBL)
+    return ScoreSimilarité
