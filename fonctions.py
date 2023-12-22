@@ -413,3 +413,37 @@ def contenu_doc_plus_imp(doc_plus_pert): #doc plus important correspond au disco
         contenu=f.read()
     return contenu
 
+def affiner_reponse(question, reponse):
+
+    ponctuation_final = ['!', '?', '.', '...']
+
+    # Liste de propositions non exhaustives
+    question_starters = {
+        "Comment": "Après analyse, ",
+        "Pourquoi": "Car, ",
+        "Peux-tu": "Oui, bien sûr!"
+    }
+
+    questionnement = question_starters.keys()   #questionnement correspond au début de question (Où? Quand? Comment? etc)
+    for mot in questionnement:
+        if mot in question:
+            LA_question=mot                     #le questionnement present dans la question de l'utilisateur
+
+    reponse_affiner=question_starters[LA_question]  #la reponse affiner prend la reponse correspondant à la question
+
+    for car in reponse:
+
+        for car_f in reponse_affiner:   #prend le dernier caractere de la reponse affiner
+            dernier_car = car_f
+
+        if (dernier_car in ponctuation_final) and (97<=ord(car)<=122):  #et si c une ponctuation final et que le caractere actuel de la reponse est en minuscule
+            car = chr(ord(car) - 32)    #on la transforme en majuscule
+            reponse_affiner += ' ' + car    #on ajoute donc un espace et la lettre majuscule
+        else:
+            reponse_affiner+=car
+
+    if not car in ponctuation_final:    #si le dernier caractere de la reponse affiner n'est pas une ponctuation, on rajoute un point
+        reponse_affiner+='.'
+
+    return reponse_affiner
+
