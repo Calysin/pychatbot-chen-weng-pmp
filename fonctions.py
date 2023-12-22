@@ -162,7 +162,9 @@ def TF_IDF(files_names):
                 L.append(0)                     #si le mot n'existe pas dans ce fichier = 0
         matrice_tf_idf.append(L)                #matrice, ligne: fichier, colonne: tf-idf de chaque mot du fichier
 
+    print(matrice_tf_idf)
     tf_idf=transpose_matrice(matrice_tf_idf)    #transpose matrice pour avoir les lignes et les colonnes inversé
+    print(tf_idf)
     return tf_idf, mot_tf
 
 
@@ -340,7 +342,6 @@ def CleanedQuestion(char):
                 mot2 += lettre
         if mot2:
             LQuestionPropre2.append(mot2)
-    print(LQuestionPropre2)
     return LQuestionPropre2
 
 
@@ -386,3 +387,29 @@ def TF_IDF_question(question, files_names):
             tf_idf.append(0)
 
     return tf_idf
+
+def calcul_doc_plus_pert(question, files_names):
+
+    liste_nom_numero=extraire_noms_avec_numero(files_names)
+    matrice_tf_idf=TF_IDF(files_names)
+    vecteur_tf_idf_question=TF_IDF_question(question)
+
+    M_tf_idf=transpose_matrice(matrice_tf_idf)      #transposé de la matrice tf idf pour avoir des lignes qui correspond aux fichiers
+
+    valeur_similarité_max=CalculSimilaritéCFinal(M_tf_idf[0], vecteur_tf_idf_question)  #prend une valeur de similarité et un discours pour pouvoir comparer
+    discours=files_names[0]
+
+    for i in range(1, len(liste_nom_numero)):  # Boucle permettant de parcourir la matrice tf idf par fichier
+        valeur_similarité = CalculSimilaritéCFinal(M_tf_idf[i], vecteur_tf_idf_question)
+
+        if valeur_similarité>valeur_similarité_max:
+            valeur_similarité_max=valeur_similarité
+            discours=liste_nom_numero[i]
+
+    return discours
+
+def contenu_doc_plus_imp(doc_plus_pert): #doc plus important correspond au discours le plus pertinent retourner de calcul_doc_plus_imp
+    with open('speeches/Nomination_{}.txt'.format(doc_plus_pert), 'r', encoding="utf-8") as f:
+        contenu=f.read()
+    return contenu
+
