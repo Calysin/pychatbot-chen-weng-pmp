@@ -1,6 +1,6 @@
 #Import des bibliothèques
 import os
-import math
+from math import *
 def list_of_files(directory, extension): #Code donné pour le projet permettant d'obtenir les fichiers
     files_names = []
     for filename in os.listdir(directory):
@@ -161,12 +161,9 @@ def TF_IDF(files_names):
             else:
                 L.append(0)                     #si le mot n'existe pas dans ce fichier = 0
         matrice_tf_idf.append(L)                #matrice, ligne: fichier, colonne: tf-idf de chaque mot du fichier
-
-    print(matrice_tf_idf)
     tf_idf=transpose_matrice(matrice_tf_idf)    #transpose matrice pour avoir les lignes et les colonnes inversé
     print(tf_idf)
     return tf_idf, mot_tf
-
 
 def tf_idf_0(files_names):
     tf_idf, liste_mot = TF_IDF(files_names) # prend la matrice if-idf et la liste des mots, chaque ligne des 2 corresponds au même mot
@@ -180,7 +177,6 @@ def tf_idf_0(files_names):
                 fichier_8 += 1              #si le tf-idf du mot dans un fichier est egal à 0 on incremente la variables fichier8
         if fichier_8==8:                    #si fichier8 == 8 est donc que tt les tf-idf d'un mot dans chaque fichier vaut 0
             L_mot_non_important.append(liste_mot[i])    #la liste apprend le mot correspondant
-
     return L_mot_non_important
 
 def tf_idf_max(files_names):            #retourne dictionnaire des mots avec les plus grans tf-idf
@@ -333,7 +329,6 @@ def CleanedQuestion(char):
                 StockageLettre = lettre
                 mot += StockageLettre
         LQuestionPropre.append(mot)
-
     LQuestionPropre2 = []
     for mot in LQuestionPropre:
         mot2 = ""
@@ -385,11 +380,37 @@ def TF_IDF_question(question, files_names):
             tf_idf.append(round(tf[mot]*idf[mot], 2))
         else:
             tf_idf.append(0)
-
     return tf_idf
 
-def calcul_doc_plus_pert(question, files_names):
+def CalculSimilaritéAProduitScalaire(AM, BL): #Calcul du produit scalaire de la matrice et la liste
+    ProduitScalaireAB = 0
+    for i in range(len(AM)):
+        for j in range(len(AM[i])):
+            ProduitScalaireAB += AM[i][j] * BL[j]
+    return ProduitScalaireAB
 
+
+def CalculSimilaritéBNormeVecteur(A): #Calcul du norme de la vecteur Matrice ou Liste
+    NormeA = 0
+    if isinstance(A, list) and isinstance(A[0], list) == True: #Si matrice, alors calculer de cette manière
+        for i in range(len(A)):
+            for j in range(len(A[i])):
+                NormeA += A[i][j] ** 2
+        NormeA = sqrt(NormeA)
+    else: #Si liste, alors calculer de cette autre manière
+        for i in range(len(A)):
+            NormeA += A[i]**2
+        NormeA = sqrt(NormeA)
+    return NormeA
+
+def CalculSimilaritéCFinal(AM, BL): #Cacul du score de smilarité
+    ProduitScalaireAB = CalculSimilaritéAProduitScalaire(AM, BL)
+    NormeAM = CalculSimilaritéBNormeVecteur(AM)
+    NormeBL = CalculSimilaritéBNormeVecteur(BL)
+    ScoreSimilarité = ProduitScalaireAB / (NormeAM * NormeBL)
+    return ScoreSimilarité
+  
+def calcul_doc_plus_pert(question, files_names):
     liste_nom_numero=extraire_noms_avec_numero(files_names)
     matrice_tf_idf=TF_IDF(files_names)
     vecteur_tf_idf_question=TF_IDF_question(question)
@@ -412,38 +433,3 @@ def contenu_doc_plus_imp(doc_plus_pert): #doc plus important correspond au disco
     with open('speeches/Nomination_{}.txt'.format(doc_plus_pert), 'r', encoding="utf-8") as f:
         contenu=f.read()
     return contenu
-
-def affiner_reponse(question, reponse):
-
-    ponctuation_final = ['!', '?', '.', '...']
-
-    # Liste de propositions non exhaustives
-    question_starters = {
-        "Comment": "Après analyse, ",
-        "Pourquoi": "Car, ",
-        "Peux-tu": "Oui, bien sûr!"
-    }
-
-    questionnement = question_starters.keys()   #questionnement correspond au début de question (Où? Quand? Comment? etc)
-    for mot in questionnement:
-        if mot in question:
-            LA_question=mot                     #le questionnement present dans la question de l'utilisateur
-
-    reponse_affiner=question_starters[LA_question]  #la reponse affiner prend la reponse correspondant à la question
-
-    for car in reponse:
-
-        for car_f in reponse_affiner:   #prend le dernier caractere de la reponse affiner
-            dernier_car = car_f
-
-        if (dernier_car in ponctuation_final) and (97<=ord(car)<=122):  #et si c une ponctuation final et que le caractere actuel de la reponse est en minuscule
-            car = chr(ord(car) - 32)    #on la transforme en majuscule
-            reponse_affiner += ' ' + car    #on ajoute donc un espace et la lettre majuscule
-        else:
-            reponse_affiner+=car
-
-    if not car in ponctuation_final:    #si le dernier caractere de la reponse affiner n'est pas une ponctuation, on rajoute un point
-        reponse_affiner+='.'
-
-    return reponse_affiner
-
