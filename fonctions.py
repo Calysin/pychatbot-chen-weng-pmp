@@ -374,30 +374,23 @@ def TF_IDF_question(question, files_names):
             tf_idf.append(0)
     return tf_idf
 
-def CalculSimilaritéAProduitScalaire(AM, BL): #Calcul du produit scalaire de la matrice et la liste
-    ProduitScalaireAB = 0
-    for i in range(len(AM)): #pour la longueur de la matrice
-        for j in range(len(AM[i])): #pour la longueur des lignes de la matrice
-            ProduitScalaireAB += AM[i][j] * BL[j] #valeur de matrice * valeur de liste
-    return ProduitScalaireAB
+def CalculSimilaritéAProduitScalaire(LDoc, LQuest):
+    ProduitScalaireDocQuest = 0
+    for i in range(len(LDoc)):
+        ProduitScalaireAB += LDoc[i] * LQuest[j]
+    return ProduitScalaireDocQuest
 
-def CalculSimilaritéBNormeVecteur(A): #Calcul du norme de la vecteur Matrice ou Liste
-    NormeA = 0
-    if isinstance(A, list) and isinstance(A[0], list) == True: #Si matrice, alors calculer de cette manière
-        for i in range(len(A)):
-            for j in range(len(A[i])):
-                NormeA += A[i][j] ** 2
-        NormeA = sqrt(NormeA)
-    else: #Si liste, alors calculer de cette autre manière
-        for i in range(len(A)):
-            NormeA += A[i]**2
-        NormeA = sqrt(NormeA)
-    return NormeA
+def CalculSimilaritéBNormeVecteur(LDocOrQuest):
+    NormeDocOrQuest = 0
+    for i in range(len(LDocOrQuest)):
+        NormeDocOrQuest += LDocOrQuest[i]**2
+        NormeDocOrQuest = sqrt(NormeDocOrQuest)
+    return NormeDocOrQuest
 
-def CalculSimilaritéCFinal(AM, BL): #Cacul du score de smilarité
-    ProduitScalaireAB = CalculSimilaritéAProduitScalaire(AM, BL)
-    NormeAM = CalculSimilaritéBNormeVecteur(AM)
-    NormeBL = CalculSimilaritéBNormeVecteur(BL)
+def CalculSimilaritéCFinal(LDoc, LQuest):
+    ProduitScalaireDocQuest = CalculSimilaritéAProduitScalaire(LDoc, LQuest)
+    NormeDoc = CalculSimilaritéBNormeVecteur(LDocOrQuest)
+    NormeQuest = CalculSimilaritéBNormeVecteur(LDocOrQuest)
     ScoreSimilarité = ProduitScalaireAB / (NormeAM * NormeBL)
     return ScoreSimilarité
   
