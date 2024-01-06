@@ -7,6 +7,8 @@ files_names = list_of_files(directory, "txt")
 
 Question = input("Donnez moi votre question ? ")
 CleanedQuestion(Question)
+test = print(TF_IDF_question(Question, files_names))
+tes = print(calcul_doc_plus_pert(Question, files_names))
 
 print("Bienvenue dans le pychatbot en developpement ! \n")
 print("Nos informations concernent les discours de ces présidents: ")
@@ -45,8 +47,6 @@ while recommencer==1:
         print("Celui-ci est encore en cours de developpement")
     elif functionality >= "7":
         print("Nous ne faisons pas autant de fonctionnalité pour le moment")
-
     print("Souhaitez vous utiliser d'autre fonctionnalité?")
-
     recommencer=int(input("0 : Non\n"
                           "1 : Oui\n"))
