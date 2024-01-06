@@ -8,7 +8,6 @@ def list_of_files(directory, extension): #Code donné pour le projet permettant 
             files_names.append(filename)
     return files_names
 
-
 def extraire_noms_presidents(L): #Fonction permettant d'extraire les noms des présidents sans nombre
     liste=[] #Liste stockant les noms des présidents extrait
     for i in range(len(L)): #Boucle obtenant les noms avec les numeros
@@ -344,37 +343,30 @@ def find_word_in_corpus(question, files_names):
     l_mot_question=CleanedQuestion(question)
     l_mots_fichiers=[]
     liste_nom_numero = extraire_noms_avec_numero(files_names)  #liste de tout les noms avec numero
-
     for i in range(len(liste_nom_numero)):  # Boucle permettant de parcourir tous les fichiers, et de calculer chaque tf-idf d'un mot dans un fichier
         with open('cleaned/CleanedNomination_{}.txt'.format(liste_nom_numero[i]), 'r', encoding="utf-8") as f:
             contenu= f.read().split()       #liste contenu de tt les mots des fichiers
             for mot in contenu:             #boucle pour eviter matrice
                 l_mots_fichiers.append(mot) #liste mots tt fichiers apprend chaque mot de la liste contenu
-
     j = int(0)                              #variables j pour eviter de depasser len(l) a cause du del
     for i in range(len(l_mot_question)):
         if l_mot_question[j] not in l_mots_fichiers:    #si le mot de la question n'existe pas dans les fichiers on le supprime
             del(l_mot_question[j])
             j-=1
         j+=1
-
     return l_mot_question
 
 def TF_IDF_question(question, files_names):
     liste_mots_questions=find_word_in_corpus(question, files_names) #liste mots de la question
     idf=IDF(files_names)                                            #idf de tt les mots des fichiers
-
     tf={}
     tf_idf=[]
-
     tf_idf_tt, mot_tf_tt=TF_IDF(files_names)
-
     for i in range(len(liste_mots_questions)):  #dico avec repet des mots de la question
         if liste_mots_questions[i] not in tf:
             tf[liste_mots_questions[i]]=1
         else:
             tf[liste_mots_questions[i]]+=1
-
     for mot in mot_tf_tt:
         if mot in tf:
             tf_idf.append(round(tf[mot]*idf[mot], 2))
@@ -384,11 +376,10 @@ def TF_IDF_question(question, files_names):
 
 def CalculSimilaritéAProduitScalaire(AM, BL): #Calcul du produit scalaire de la matrice et la liste
     ProduitScalaireAB = 0
-    for i in range(len(AM)):
-        for j in range(len(AM[i])):
-            ProduitScalaireAB += AM[i][j] * BL[j]
+    for i in range(len(AM)): #pour la longueur de la matrice
+        for j in range(len(AM[i])): #pour la longueur des lignes de la matrice
+            ProduitScalaireAB += AM[i][j] * BL[j] #valeur de matrice * valeur de liste
     return ProduitScalaireAB
-
 
 def CalculSimilaritéBNormeVecteur(A): #Calcul du norme de la vecteur Matrice ou Liste
     NormeA = 0
@@ -414,19 +405,14 @@ def calcul_doc_plus_pert(question, files_names):
     liste_nom_numero=extraire_noms_avec_numero(files_names)
     matrice_tf_idf, vide =TF_IDF(files_names)
     vecteur_tf_idf_question=TF_IDF_question(question, files_names)
-
     M_tf_idf=transpose_matrice(matrice_tf_idf)      #transposé de la matrice tf idf pour avoir des lignes qui correspond aux fichiers
-
     valeur_similarité_max=CalculSimilaritéCFinal(M_tf_idf[0], vecteur_tf_idf_question)  #prend une valeur de similarité et un discours pour pouvoir comparer
     discours=files_names[0]
-
     for i in range(1, len(liste_nom_numero)):  # Boucle permettant de parcourir la matrice tf idf par fichier
         valeur_similarité = CalculSimilaritéCFinal(M_tf_idf[i], vecteur_tf_idf_question)
-
         if valeur_similarité>valeur_similarité_max:
             valeur_similarité_max=valeur_similarité
             discours=liste_nom_numero[i]
-
     return discours
 
 def contenu_doc_plus_imp(doc_plus_pert): #doc plus important correspond au discours le plus pertinent retourner de calcul_doc_plus_imp
@@ -434,37 +420,34 @@ def contenu_doc_plus_imp(doc_plus_pert): #doc plus important correspond au disco
         contenu=f.read()
     return contenu
 
+def TFIDFQuestionPlusElevee():
+    QuestionTFIDFMax = max(TF_IDF_question(question, files_names))
+    return QuestionTFIDFMax
+
+def RepererFirstOccDansDocPertinant():
+    calcul_doc_plus_pert(question, files_names)
+
 def affiner_reponse(question, reponse):
-
     ponctuation_final = ['!', '?', '.', '...']
-
     # Liste de propositions non exhaustives
     question_starters = {
         "Comment": "Après analyse, ",
         "Pourquoi": "Car, ",
         "Peux-tu": "Oui, bien sûr!"
     }
-
     questionnement = question_starters.keys()   #questionnement correspond au début de question (Où? Quand? Comment? etc)
     for mot in questionnement:
         if mot in question:
             LA_question=mot                     #le questionnement present dans la question de l'utilisateur
-
     reponse_affiner=question_starters[LA_question]  #la reponse affiner prend la reponse correspondant à la question
-
     for car in reponse:
-
         for car_f in reponse_affiner:   #prend le dernier caractere de la reponse affiner
             dernier_car = car_f
-
         if (dernier_car in ponctuation_final) and (97<=ord(car)<=122):  #et si c une ponctuation final et que le caractere actuel de la reponse est en minuscule
             car = chr(ord(car) - 32)    #on la transforme en majuscule
             reponse_affiner += ' ' + car    #on ajoute donc un espace et la lettre majuscule
         else:
             reponse_affiner+=car
-
     if not car in ponctuation_final:    #si le dernier caractere de la reponse affiner n'est pas une ponctuation, on rajoute un point
         reponse_affiner+='.'
-
     return reponse_affiner
-
