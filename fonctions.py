@@ -391,7 +391,7 @@ def CalculSimilaritéCFinal(LDoc, LQuest):
     ProduitScalaireDocQuest = CalculSimilaritéAProduitScalaire(LDoc, LQuest)
     NormeDoc = CalculSimilaritéBNormeVecteur(LDocOrQuest)
     NormeQuest = CalculSimilaritéBNormeVecteur(LDocOrQuest)
-    ScoreSimilarité = ProduitScalaireAB / (NormeAM * NormeBL)
+    ScoreSimilarité = ProduitScalaireDocQuest / (NormeDoc * NormeQuest)
     return ScoreSimilarité
   
 def calcul_doc_plus_pert(question, files_names):
