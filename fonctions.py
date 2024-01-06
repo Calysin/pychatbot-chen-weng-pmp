@@ -377,7 +377,7 @@ def TF_IDF_question(question, files_names):
 def CalculSimilaritéAProduitScalaire(LDoc, LQuest):
     ProduitScalaireDocQuest = 0
     for i in range(len(LDoc)):
-        ProduitScalaireAB += LDoc[i] * LQuest[j]
+        ProduitScalaireDocQuest += LDoc[i] * LQuest[j]
     return ProduitScalaireDocQuest
 
 def CalculSimilaritéBNormeVecteur(LDocOrQuest):
