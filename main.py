@@ -8,8 +8,8 @@ files_names = list_of_files(directory, "txt")
 Question = input("Donnez moi votre question ? ")
 CleanedQuestion(Question)
 
-test = print(TF_IDF_question(Question, files_names))
-tes = print(calcul_doc_plus_pert(Question, files_names))
+test = print("test", TF_IDF_question(Question, files_names))
+tes = print("tes", calcul_doc_plus_pert(Question, files_names))
 
 print("Bienvenue dans le pychatbot en developpement ! \n")
 print("Nos informations concernent les discours de ces présidents: ")
