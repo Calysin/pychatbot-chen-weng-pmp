@@ -1,6 +1,11 @@
-#Import des bibliothèques
+#Importation des bibliothèques autorisées dans le projet
 import os
 from math import *
+
+#############################################################################################################
+# PARTIE 1#
+#############################################################################################################
+
 def list_of_files(directory, extension): #Code donné pour le projet permettant d'obtenir les fichiers
     files_names = []
     for filename in os.listdir(directory):
@@ -35,7 +40,6 @@ def extraire_noms_presidents(L): #Fonction permettant d'extraire les noms des pr
                 liste_nom_final.append(liste_noms[i])
     return liste_nom_final
 
-
 def association_prenom(L): #Fonction associant les prénoms aux noms
     liste_complete=[]
     for i in range(len(L)): #Pour chaque nom dans la liste obtenue dans la dernière fonction, ajouté son prénom
@@ -57,7 +61,6 @@ def print_noms(L):  #Fonction affichant les nom et prénoms des présidents obte
 
 def extraire_noms_avec_numero(L): #Fonction qui extrait les noms des présidents avec les numéros cette fois-ci
     liste=[]
-
     for i in range(len(L)):         #obtenir nom avec numero
         nom = str()
         start = 0
@@ -135,8 +138,6 @@ def transpose_matrice(M):
         matrice_final.append(L)
     return matrice_final
 
-
-
 def TF_IDF(files_names):
     liste_nom_numero = extraire_noms_avec_numero(files_names)  #liste de tout les noms avec numero
     matrice_tf_idf = []
@@ -167,11 +168,9 @@ def TF_IDF(files_names):
 def tf_idf_0(files_names):
     tf_idf, liste_mot = TF_IDF(files_names) # prend la matrice if-idf et la liste des mots, chaque ligne des 2 corresponds au même mot
     L_mot_non_important=[]                  #creer liste qui va stocker les mots les moins important
-
     for i in range(len(tf_idf)):
         fichier_8=0
         for j in range(len(tf_idf[i])):
-
             if tf_idf[i][j]==0:
                 fichier_8 += 1              #si le tf-idf du mot dans un fichier est egal à 0 on incremente la variables fichier8
         if fichier_8==8:                    #si fichier8 == 8 est donc que tt les tf-idf d'un mot dans chaque fichier vaut 0
@@ -180,27 +179,20 @@ def tf_idf_0(files_names):
 
 def tf_idf_max(files_names):            #retourne dictionnaire des mots avec les plus grans tf-idf
     tf_idf, liste_mot = TF_IDF(files_names)     #prend la matrice if-idf et la liste des mots, chaque ligne des 2 corresponds au même mot
-
     tmp_val = 0
     tfidf_max=[]
     mot=[]
-
-
     for i in range(len(tf_idf)):
-
         for j in range(len(tf_idf[i])):
             if tmp_val<tf_idf[i][j]:                       #si cette somme est plus grande que tfidf_max
                 tfidf_max=[]
                 tfidf_max.append(tf_idf[i][j])               #tfidf_max devient cette somme
                 tmp_val=tf_idf[i][j]
-
                 mot=[]
                 mot.append(liste_mot[i])                         #on stock le mot correspondant
-
             elif tmp_val==tf_idf[i][j]: #apprendre une autre variable dans la liste si elle a autant de repetition que le(s) mot(s) deja stocker
                 tfidf_max.append(tf_idf[i][j])  # tfidf_max devient cette somme
                 mot.append(liste_mot[i])
-
     return mot
 
 
@@ -213,7 +205,6 @@ def mot_plus_repet(nom, files_names):
         list_nom.append(nom2)
     else:
         list_nom.append(nom)
-
     dictionnaire={}
     for i in range(len(list_nom)):  # Boucle permettant de parcourir les fichiers
         with open('cleaned/CleanedNomination_{}.txt'.format(list_nom[i]), 'r', encoding="utf-8") as f:
@@ -228,7 +219,6 @@ def mot_plus_repet(nom, files_names):
     liste_mot=[mot]             #prend un mot et sa valeur au pif pour pouvoir comparer
     mot_plus=dictionnaire[mot]
     mot_non_imp=tf_idf_0(files_names)
-
     for mot in dictionnaire:
         if dictionnaire[mot] > mot_plus and mot not in mot_non_imp:    #si le mot à une plus grande valeur que celle stoker
             liste_mot=[]                    #on supprime ceux stocker
@@ -270,72 +260,74 @@ def ResultatNation(L): #Fonction pour afficher la définition sans le nombre de 
 
 def PremierClimat(L):
     ListeNomNum = extraire_noms_avec_numero(L)
-    MinimalLigne = 5412
+    MinimalLigne = 5412 #Initie les valeurs très hautes pour qu'elles se fasse écraser par les nouvelles (plus petites)
     StockLigne = 5462
     for i in range(len(ListeNomNum)):  #Boucle parcourant tous les fichiers
         with open('cleaned/CleanedNomination_{}.txt'.format(ListeNomNum[i]), 'r') as f:
-            contenu = f.readlines()
+            contenu = f.readlines() #Lire toutes les lignes du fichier
             NumeroLigne = 1
-            for ligne in contenu:
+            for ligne in contenu: #Boucle lisant toutes les lignes du contenu des fichiers
                 mots = ligne.split()  #Séparer les mots dans les lignes
                 NumeroMot = 1
-                for mot in mots:
-                    if mot == "climat":
+                for mot in mots: #Boucle parcourant chaque mot dans les lignes
+                    if mot == "climat": #Si le mot est climat
                         StockLigne = min(StockLigne, NumeroLigne)
                     NumeroMot += 1
                 NumeroLigne += 1
-        if MinimalLigne >= StockLigne:
-            MinimalLigne = StockLigne
+        if MinimalLigne >= StockLigne: #Si ligne minimum est plus grand que ligne stocké alors
+            MinimalLigne = StockLigne #Remplacer ligne mini par ligne stocké
             PremierPresidentClimat = ListeNomNum[i]
-    return PremierPresidentClimat
+    return PremierPresidentClimat #Retourne le premier présidant ayant dit climat
 
 def PremierEcologie(L):
     ListeNomNum = extraire_noms_avec_numero(L)
     PremierPresidentEcologie = None
-    MinimalLigne = 5412
+    MinimalLigne = 5412 #Initie les valeurs très hautes pour qu'elles se fasse écraser par les nouvelles (plus petites)
     StockLigne = 5462
     for i in range(len(ListeNomNum)):  #Boucle parcourant tous les fichiers
         with open('cleaned/CleanedNomination_{}.txt'.format(ListeNomNum[i]), 'r') as f:
-            contenu = f.readlines()
+            contenu = f.readlines() #Lire toutes les lignes du fichier
             NumeroLigne = 1
-            for ligne in contenu:
+            for ligne in contenu: #Boucle lisant toutes les lignes du contenu des fichiers
                 mots = ligne.split()  #Séparer les mots dans les lignes
                 NumeroMot = 1
                 for mot in mots:
-                    if mot == "écologie":
+                    if mot == "écologie": #Si le mot est ecologie
                         StockLigne = min(StockLigne, NumeroLigne)
                     NumeroMot += 1
                 NumeroLigne += 1
-        if MinimalLigne >= StockLigne:
-            MinimalLigne = StockLigne
+        if MinimalLigne >= StockLigne: #Si ligne minimum est plus grand que ligne stocké alors
+            MinimalLigne = StockLigne #Remplacer ligne mini par ligne stocké
             PremierPresidentEcologie = ListeNomNum[i]
-    return PremierPresidentEcologie
+    return PremierPresidentEcologie  #Retourne le premier présidant ayant dit écologie
 
-#PARTIE 2
+#############################################################################################################
+#PARTIE 2#
+#############################################################################################################
 
 def CleanedQuestion(char):
     ponctuation = ['!', ':', ";", '?', '.', ',', '(', ')', '{', '}', '[', ']']  # Liste de caractère devant être supprimé ou remplacé par un espace
     special = ["'", '"', '-']
-    L = char.split()
-    LQuestionPropre = []
-    for i in range (len(L)):
+    L = char.split() #Chaine de caractère = liste de mot L
+    LQuestionPropre = [] #Initie une liste vide
+    for i in range (len(L)): #Boucle répétant le même nombre que le nombre de mot dans la question
         mot = ""
-        for lettre in L[i]:
-            if 65 <= ord(lettre) <= 90:
-                StockageLettre = lettre.lower()
-                mot += StockageLettre
-            else:
+        for lettre in L[i]: #Prends lettre dans le mot
+            if 65 <= ord(lettre) <= 90: #Vérifie si c'est une majuscule
+                StockageLettre = lettre.lower() #Si oui, convertir maj en minuscule
+                mot += StockageLettre #Mettre la lettre en minuscule dans la variable mot
+            else: #Si non
                 StockageLettre = lettre
-                mot += StockageLettre
-        LQuestionPropre.append(mot)
-    LQuestionPropre2 = []
-    for mot in LQuestionPropre:
+                mot += StockageLettre #Mettre la lettre en minuscule dans la variable mot
+        LQuestionPropre.append(mot) #Ajouter le mot dans la liste vide initié en haut
+    LQuestionPropre2 = [] #Initie une 2e liste vide
+    for mot in LQuestionPropre: #Pour les mots dans la 1ere liste initié
         mot2 = ""
-        for lettre in mot:
-            if lettre not in ponctuation and lettre not in special:
-                mot2 += lettre
+        for lettre in mot: #Parcours chaque lettre dans le mot
+            if lettre not in ponctuation and lettre not in special: #Si lettre est pas dans ponctuation ou spécial
+                mot2 += lettre #Ajouter à mot2
         if mot2 != "":
-            LQuestionPropre2.append(mot2)
+            LQuestionPropre2.append(mot2) #Ajout du mot sans ponctuation dans la 2e liste initié
     return LQuestionPropre2
 
 def find_word_in_corpus(question, files_names):
@@ -375,23 +367,23 @@ def TF_IDF_question(question, files_names):
 
 def CalculSimilaritéAProduitScalaire(LDoc, LQuest):
     ProduitScalaireDocQuest = 0
-    for i in range(len(LDoc)):
-        ProduitScalaireDocQuest += LDoc[i] * LQuest[i]
-    return ProduitScalaireDocQuest
+    for i in range(len(LDoc)): #Boucle parcourant les longueurs de la liste TF-IDF de LDoc/LQuest (car ils font la meme taille)
+        ProduitScalaireDocQuest += LDoc[i] * LQuest[i] #Utilisation de la formule fournie
+    return ProduitScalaireDocQuest #Retourne le produit scalaire des 2 listes
 
 def CalculSimilaritéBNormeVecteur(LDocOrQuest):
     NormeDocOrQuest = 0
-    for i in range(len(LDocOrQuest)):
-        NormeDocOrQuest += LDocOrQuest[i]**2
-        NormeDocOrQuest = sqrt(NormeDocOrQuest)
-    return NormeDocOrQuest
+    for i in range(len(LDocOrQuest)): #Boucle parcourant la longueur de la liste TF-IDF de LDoc ou LQuest
+        NormeDocOrQuest += LDocOrQuest[i]**2 #Utilisation de la formule fournie
+        NormeDocOrQuest = sqrt(NormeDocOrQuest #Utilisation de la formule fournie
+    return NormeDocOrQuest #Retourne la norme de la liste TF-IDF Doc ou Question
 
 def CalculSimilaritéCFinal(LDoc, LQuest):
-    ProduitScalaireDocQuest = CalculSimilaritéAProduitScalaire(LDoc, LQuest)
-    NormeDoc = CalculSimilaritéBNormeVecteur(LDoc)
-    NormeQuest = CalculSimilaritéBNormeVecteur(LQuest)
-    ScoreSimilarité = ProduitScalaireDocQuest / (NormeDoc * NormeQuest)
-    return ScoreSimilarité
+    ProduitScalaireDocQuest = CalculSimilaritéAProduitScalaire(LDoc, LQuest) #A) Reprise de la fonction crée au-dessus
+    NormeDoc = CalculSimilaritéBNormeVecteur(LDoc) #B) Reprise de la fonction crée au-dessus
+    NormeQuest = CalculSimilaritéBNormeVecteur(LQuest) #B) #Reprise de la fonction crée au-dessus
+    ScoreSimilarité = ProduitScalaireDocQuest / (NormeDoc * NormeQuest) #Utilisation de la formule fournie
+    return ScoreSimilarité #Retourne le score de similarité de les listes TF-IDF du document et de la question
   
 def calcul_doc_plus_pert(question, files_names):
     liste_nom_numero=extraire_noms_avec_numero(files_names)
