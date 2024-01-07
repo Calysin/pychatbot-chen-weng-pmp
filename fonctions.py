@@ -334,10 +334,9 @@ def CleanedQuestion(char):
         for lettre in mot:
             if lettre not in ponctuation and lettre not in special:
                 mot2 += lettre
-        if mot2:
+        if mot2 != "":
             LQuestionPropre2.append(mot2)
     return LQuestionPropre2
-
 
 def find_word_in_corpus(question, files_names):
     l_mot_question=CleanedQuestion(question)
@@ -377,7 +376,7 @@ def TF_IDF_question(question, files_names):
 def CalculSimilaritéAProduitScalaire(LDoc, LQuest):
     ProduitScalaireDocQuest = 0
     for i in range(len(LDoc)):
-        ProduitScalaireDocQuest += LDoc[i] * LQuest[j]
+        ProduitScalaireDocQuest += LDoc[i] * LQuest[i]
     return ProduitScalaireDocQuest
 
 def CalculSimilaritéBNormeVecteur(LDocOrQuest):
@@ -389,8 +388,8 @@ def CalculSimilaritéBNormeVecteur(LDocOrQuest):
 
 def CalculSimilaritéCFinal(LDoc, LQuest):
     ProduitScalaireDocQuest = CalculSimilaritéAProduitScalaire(LDoc, LQuest)
-    NormeDoc = CalculSimilaritéBNormeVecteur(LDocOrQuest)
-    NormeQuest = CalculSimilaritéBNormeVecteur(LDocOrQuest)
+    NormeDoc = CalculSimilaritéBNormeVecteur(LDoc)
+    NormeQuest = CalculSimilaritéBNormeVecteur(LQuest)
     ScoreSimilarité = ProduitScalaireDocQuest / (NormeDoc * NormeQuest)
     return ScoreSimilarité
   
