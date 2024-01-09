@@ -349,24 +349,27 @@ def TF_IDF_question(question, files_names):
             tf_idf.append(0)
     return tf_idf
 
-def CalculSimilaritéAProduitScalaire(LDoc, LQuest):
-    ProduitScalaireDocQuest = 0
-    for i in range(len(LDoc)): #Boucle parcourant les longueurs de la liste TF-IDF de LDoc/LQuest (car ils font la meme taille)
-        ProduitScalaireDocQuest += LDoc[i] * LQuest[i] #Utilisation de la formule fournie
-    return ProduitScalaireDocQuest #Retourne le produit scalaire des 2 listes
+def CalculSimilaritéAProduitScalaire(LDoc, LQues):
+    ProduitScalaireDocQues = 0
+    for i in range(len(LDoc)): #Boucle parcourant les longueurs de la liste TF-IDF de LDoc/LQues (car ils font la meme taille)
+        ProduitScalaireDocQues += LDoc[i] * LQues[i] #Utilisation de la formule fournie
+    return ProduitScalaireDocQues #Retourne le produit scalaire des 2 listes
 
-def CalculSimilaritéBNormeVecteur(LDocOrQuest):
-    NormeDocOrQuest = 0
-    for i in range(len(LDocOrQuest)): #Boucle parcourant la longueur de la liste TF-IDF de LDoc ou LQuest
-        NormeDocOrQuest += LDocOrQuest[i]**2 #Utilisation de la formule fournie
-        NormeDocOrQuest = sqrt(NormeDocOrQuest) #Utilisation de la formule fournie
-    return NormeDocOrQuest #Retourne la norme de la liste TF-IDF Doc ou Question
+def CalculSimilaritéBNormeVecteur(LDocOrQues):
+    NormeDocOrQues = 0
+    for i in range(len(LDocOrQues)): #Boucle parcourant la longueur de la liste TF-IDF de LDoc ou LQues
+        NormeDocOrQues += LDocOrQues[i]**2 #Utilisation de la formule fournie
+        NormeDocOrQues = sqrt(NormeDocOrQues) #Utilisation de la formule fournie
+    return NormeDocOrQues #Retourne la norme de la liste TF-IDF Doc ou Question
 
-def CalculSimilaritéCFinal(LDoc, LQuest):
-    ProduitScalaireDocQuest = CalculSimilaritéAProduitScalaire(LDoc, LQuest) #A) Reprise de la fonction crée au-dessus
+def CalculSimilaritéCFinal(LDoc, LQues):
+    ProduitScalaireDocQues = CalculSimilaritéAProduitScalaire(LDoc, LQues) #A) Reprise de la fonction crée au-dessus
     NormeDoc = CalculSimilaritéBNormeVecteur(LDoc) #B) Reprise de la fonction crée au-dessus
-    NormeQuest = CalculSimilaritéBNormeVecteur(LQuest) #B) #Reprise de la fonction crée au-dessus
-    ScoreSimilarité = ProduitScalaireDocQuest / (NormeDoc * NormeQuest) #Utilisation de la formule fournie
+    NormeQues = CalculSimilaritéBNormeVecteur(LQues) #B) #Reprise de la fonction crée au-dessus
+    if NormeQues == 0 or NormeDoc == 0:
+        ScoreSimilarité = 0
+    else:
+        ScoreSimilarité = ProduitScalaireDocQues / (NormeDoc * NormeQues) #Utilisation de la formule fournie
     return ScoreSimilarité #Retourne le score de similarité de les listes TF-IDF du document et de la question
   
 def calcul_doc_plus_pert(question, files_names):
