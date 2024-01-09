@@ -305,12 +305,13 @@ def PremierEcologie(L):
 #PARTIE 2#
 #############################################################################################################
 
-def CleanedQuestion(char):
+def CleanedQuestion(question):
   ponctuation = ['!', ':', ";", '?', '.', ',', '(', ')', '{', '}', '[', ']']  # Liste de caractère devant être supprimé ou remplacé par un espace
   special = ["'", '"', '-']
+  question = question.lower()
   for caractere in ponctuation + special: #pour tous les char de la question qui sont dans les deux listes au-dessus
-      char = char.replace(caractere, " ") #remplacer un char dans les listes au dessus par un espace
-      LQuesClean = char.split()
+      question = question.replace(caractere, " ") #remplacer un char dans les listes au dessus par un espace
+      LQuesClean = question.split()
   return LQuesClean
 
 def find_word_in_corpus(question, files_names):
