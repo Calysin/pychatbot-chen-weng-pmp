@@ -306,29 +306,12 @@ def PremierEcologie(L):
 #############################################################################################################
 
 def CleanedQuestion(char):
-    ponctuation = ['!', ':', ";", '?', '.', ',', '(', ')', '{', '}', '[', ']']  # Liste de caractère devant être supprimé ou remplacé par un espace
-    special = ["'", '"', '-']
-    L = char.split() #Chaine de caractère = liste de mot L
-    LQuestionPropre = [] #Initie une liste vide
-    for i in range (len(L)): #Boucle répétant le même nombre que le nombre de mot dans la question
-        mot = ""
-        for lettre in L[i]: #Prends lettre dans le mot
-            if 65 <= ord(lettre) <= 90: #Vérifie si c'est une majuscule
-                StockageLettre = lettre.lower() #Si oui, convertir maj en minuscule
-                mot += StockageLettre #Mettre la lettre en minuscule dans la variable mot
-            else: #Si non
-                StockageLettre = lettre
-                mot += StockageLettre #Mettre la lettre en minuscule dans la variable mot
-        LQuestionPropre.append(mot) #Ajouter le mot dans la liste vide initié en haut
-    LQuestionPropre2 = [] #Initie une 2e liste vide
-    for mot in LQuestionPropre: #Pour les mots dans la 1ere liste initié
-        mot2 = ""
-        for lettre in mot: #Parcours chaque lettre dans le mot
-            if lettre not in ponctuation and lettre not in special: #Si lettre est pas dans ponctuation ou spécial
-                mot2 += lettre #Ajouter à mot2
-        if mot2 != "":
-            LQuestionPropre2.append(mot2) #Ajout du mot sans ponctuation dans la 2e liste initié
-    return LQuestionPropre2
+  ponctuation = ['!', ':', ";", '?', '.', ',', '(', ')', '{', '}', '[', ']']  # Liste de caractère devant être supprimé ou remplacé par un espace
+  special = ["'", '"', '-']
+  for caractere in ponctuation + special: #pour tous les char de la question qui sont dans les deux listes au-dessus
+      char = char.replace(caractere, " ") #remplacer un char dans les listes au dessus par un espace
+      LQuesClean = char.split()
+  return LQuesClean
 
 def find_word_in_corpus(question, files_names):
     l_mot_question=CleanedQuestion(question)
@@ -375,7 +358,7 @@ def CalculSimilaritéBNormeVecteur(LDocOrQuest):
     NormeDocOrQuest = 0
     for i in range(len(LDocOrQuest)): #Boucle parcourant la longueur de la liste TF-IDF de LDoc ou LQuest
         NormeDocOrQuest += LDocOrQuest[i]**2 #Utilisation de la formule fournie
-        NormeDocOrQuest = sqrt(NormeDocOrQuest #Utilisation de la formule fournie
+        NormeDocOrQuest = sqrt(NormeDocOrQuest) #Utilisation de la formule fournie
     return NormeDocOrQuest #Retourne la norme de la liste TF-IDF Doc ou Question
 
 def CalculSimilaritéCFinal(LDoc, LQuest):
