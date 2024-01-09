@@ -8,7 +8,12 @@ files_names = list_of_files(directory, "txt")
 Question = input("Donnez moi votre question ? ")
 CleanedQuestion(Question)
 
-print("Bienvenue dans le pychatbot en developpement ! \n")
+test = print("test", TF_IDF_question(Question, files_names))
+tes = print("tes", calcul_doc_plus_pert(Question, files_names))
+
+print("\n")
+print("\n")
+print("Bienvenue dans le pychatbot ! \n")
 print("Nos informations concernent les discours de ces présidents: ")
 noms = (extraire_noms_presidents(files_names))
 prenom_n = association_prenom(noms)
@@ -47,6 +52,5 @@ while recommencer==1:
         print("Nous ne faisons pas autant de fonctionnalité pour le moment")
 
     print("Souhaitez vous utiliser d'autre fonctionnalité?")
-
     recommencer=int(input("0 : Non\n"
                           "1 : Oui\n"))
