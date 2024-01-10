@@ -162,7 +162,6 @@ def TF_IDF(files_names):
                 L.append(0)                     #si le mot n'existe pas dans ce fichier = 0
         matrice_tf_idf.append(L)                #matrice, ligne: fichier, colonne: tf-idf de chaque mot du fichier
     tf_idf=transpose_matrice(matrice_tf_idf)    #transpose matrice pour avoir les lignes et les colonnes inversé
-    print(tf_idf)
     return tf_idf, mot_tf
 
 def tf_idf_0(files_names):
@@ -215,7 +214,6 @@ def mot_plus_repet(nom, files_names):
                 dictionnaire[mot] += tf[mot]    #si le mot est dans dictionnaire, on ajouter juste la valeur d'occurence du mot à celle existante
             else:
                 dictionnaire[mot] = tf[mot]     #sinon dictionnaire apprend ce mot et sa valeur
-
     liste_mot=[mot]             #prend un mot et sa valeur au pif pour pouvoir comparer
     mot_plus=dictionnaire[mot]
     mot_non_imp=tf_idf_0(files_names)
