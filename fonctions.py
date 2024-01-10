@@ -162,7 +162,6 @@ def TF_IDF(files_names):
                 L.append(0)                     #si le mot n'existe pas dans ce fichier = 0
         matrice_tf_idf.append(L)                #matrice, ligne: fichier, colonne: tf-idf de chaque mot du fichier
     tf_idf=transpose_matrice(matrice_tf_idf)    #transpose matrice pour avoir les lignes et les colonnes inversé
-    print(tf_idf)
     return tf_idf, mot_tf
 
 def tf_idf_0(files_names):
@@ -377,13 +376,15 @@ def calcul_doc_plus_pert(question, files_names):
     matrice_tf_idf, vide =TF_IDF(files_names)
     vecteur_tf_idf_question=TF_IDF_question(question, files_names)
     M_tf_idf=transpose_matrice(matrice_tf_idf)      #transposé de la matrice tf idf pour avoir des lignes qui correspond aux fichiers
+    discours=None
     valeur_similarité_max=CalculSimilaritéCFinal(M_tf_idf[0], vecteur_tf_idf_question)  #prend une valeur de similarité et un discours pour pouvoir comparer
-    discours=files_names[0]
+
     for i in range(1, len(liste_nom_numero)):  # Boucle permettant de parcourir la matrice tf idf par fichier
         valeur_similarité = CalculSimilaritéCFinal(M_tf_idf[i], vecteur_tf_idf_question)
         if valeur_similarité>valeur_similarité_max:
             valeur_similarité_max=valeur_similarité
             discours=liste_nom_numero[i]
+
     return discours
 
 def contenu_doc_plus_imp(doc_plus_pert): #doc plus important correspond au discours le plus pertinent retourner de calcul_doc_plus_imp
