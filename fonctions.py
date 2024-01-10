@@ -194,7 +194,6 @@ def tf_idf_max(files_names):            #retourne dictionnaire des mots avec les
                 mot.append(liste_mot[i])
     return mot
 
-
 def mot_plus_repet(nom, files_names):
     list_nom=[]
     if nom=='Chirac' or nom=='Mitterrand':  #si c chirac ou mitterrand on prend en compte le fait qu'ils ont 2 discours
@@ -331,7 +330,7 @@ def find_word_in_corpus(question, files_names):
 
 def TF_IDF_question(question, files_names):
     liste_mots_questions=find_word_in_corpus(question, files_names) #liste mots de la question
-    idf=IDF(files_names)                                            #idf de tt les mots des fichiers
+    idf=IDF(files_names)   #idf de tt les mots des fichiers
     tf={}
     tf_idf=[]
     tf_idf_tt, mot_tf_tt=TF_IDF(files_names)
@@ -377,13 +376,11 @@ def calcul_doc_plus_pert(question, files_names):
     M_tf_idf=transpose_matrice(matrice_tf_idf)      #transposé de la matrice tf idf pour avoir des lignes qui correspond aux fichiers
     discours=None
     valeur_similarité_max=CalculSimilaritéCFinal(M_tf_idf[0], vecteur_tf_idf_question)  #prend une valeur de similarité et un discours pour pouvoir comparer
-
     for i in range(1, len(liste_nom_numero)):  # Boucle permettant de parcourir la matrice tf idf par fichier
         valeur_similarité = CalculSimilaritéCFinal(M_tf_idf[i], vecteur_tf_idf_question)
         if valeur_similarité>valeur_similarité_max:
             valeur_similarité_max=valeur_similarité
             discours=liste_nom_numero[i]
-
     return discours
 
 def contenu_doc_plus_imp(doc_plus_pert): #doc plus important correspond au discours le plus pertinent retourner de calcul_doc_plus_imp
@@ -392,17 +389,51 @@ def contenu_doc_plus_imp(doc_plus_pert): #doc plus important correspond au disco
     return contenu
 
 def TFIDFQuestionPlusElevee(question, files_names):
-    QuestionTFIDFMax = max(TF_IDF_question(question, files_names))
-    return QuestionTFIDFMax
+    tf_idf_doc, liste_mot=TF_IDF(files_names) #on s'en fiche de tf_idf_doc sauf si t'en as besoin apres
+    tf_idf = TF_IDF_question(question, files_names)
+    valeur_max=tf_idf[0] #valeur random pour pouvoir comparer
+    for i in range(len(tf_idf)):
+        if tf_idf[i]>valeur_max:
+            valeur_max=tf_idf[i]
+            position=i
+    mot_plus_grand_tf_idf=liste_mot[position]
+    son_tf_idf=valeur_max
+    return mot_plus_grand_tf_idf
 
-def FirstOccRéponse(question, files_names):
-    DocPlusPert = calcul_doc_plus_pert(question, files_names)
-    print(DocPlusPert)
-    f = open("speeches/Nomination_{}.txt".format(DocPlusPert), "r")
-    contenu = f.readlines() #lis le contenu
-    for ligne in contenu: #prends toutes les lignes dans contenu
-        for lettre in ligne: #prendre tous les lettres de chaque ligne
-            return lettre
+def Reponse(question, files_names):
+    ponctuation = ['!', '?', '.', ',']
+    doc_plus_pert = calcul_doc_plus_pert(question, files_names)
+    contenu = contenu_doc_plus_imp(doc_plus_pert)   #.strip("\n")
+    mot = TFIDFQuestionPlusElevee(question, files_names)
+    liste_contenu_car=[]
+    tmp=''
+    for car in contenu:
+        if not car in ponctuation:
+            tmp+=car
+        else:
+            liste_contenu_car.append(tmp)
+            liste_contenu_car.append(car)
+    if not car in ponctuation:
+        liste_contenu_car.append(tmp)
+    nbLig= len(liste_contenu_car)
+    FirstOcc = None
+    for i in range(nbLig):
+        print(mot, liste_contenu_car[i])
+        if mot==liste_contenu_car[i] and FirstOcc==None:
+            FirstOcc=i
+    stop=False
+    for j in range(i, 0-1, -1):
+        if (liste_contenu_car[i] in ponctuation) and stop==False:
+            position_depart=i
+            stop=True
+    stop=False
+    reponse=''
+    for i in range(position_depart+1, nbLig):
+        if not (liste_contenu_car[i] in ponctuation) and stop==False:
+            reponse+=liste_contenu_car[i]
+        else:
+            stop=True
+
 
 def affiner_reponse(question, reponse):
     ponctuation_final = ['!', '?', '.', '...']
