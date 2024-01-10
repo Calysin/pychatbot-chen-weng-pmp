@@ -44,9 +44,7 @@ while recommencer==1:
         print("Celui-ci est encore en cours de developpement")
     elif functionality >= "7":
         Question = input("Donnez moi votre question ? ")
-
-        test = calcul_doc_plus_pert(Question, files_names)
-        t = print("t", contenu_doc_plus_imp(test))
+        print(Reponse(Question, files_names))
 
     print("Souhaitez vous utiliser d'autre fonctionnalité?")
     recommencer=int(input("0 : Non\n"
