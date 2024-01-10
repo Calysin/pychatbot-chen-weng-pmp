@@ -401,39 +401,49 @@ def TFIDFQuestionPlusElevee(question, files_names):
     return mot_plus_grand_tf_idf
 
 def Reponse(question, files_names):
-    ponctuation = ['!', '?', '.', ',']
+    ponctuation = ['!', '?', '.']
+
     doc_plus_pert = calcul_doc_plus_pert(question, files_names)
-    contenu = contenu_doc_plus_imp(doc_plus_pert)   #.strip("\n")
+    contenu1 = contenu_doc_plus_imp(doc_plus_pert)
+    contenu= contenu1.replace('\n', ' ')
     mot = TFIDFQuestionPlusElevee(question, files_names)
-    liste_contenu_car=[]
-    tmp=''
+
+    liste_contenu=[]
+
     for car in contenu:
-        if not car in ponctuation:
-            tmp+=car
-        else:
-            liste_contenu_car.append(tmp)
-            liste_contenu_car.append(car)
-    if not car in ponctuation:
-        liste_contenu_car.append(tmp)
-    nbLig= len(liste_contenu_car)
+        liste_contenu.append(car)
+
     FirstOcc = None
-    for i in range(nbLig):
-        print(mot, liste_contenu_car[i])
-        if mot==liste_contenu_car[i] and FirstOcc==None:
-            FirstOcc=i
+
+    for i in range(len(liste_contenu)):
+
+        if mot[0]==liste_contenu[i]:
+            mot_contenu=''
+
+            j=0
+            while  liste_contenu[i+j]!=" ":
+                mot_contenu+=liste_contenu[i+j]
+                j += 1
+
+            if mot==mot_contenu:
+                FirstOcc = i
+                break
+
     stop=False
-    for j in range(i, 0-1, -1):
-        if (liste_contenu_car[i] in ponctuation) and stop==False:
+    for i in range(FirstOcc, 0-1, -1):
+        if (liste_contenu[i] in ponctuation) and stop==False:
             position_depart=i
             stop=True
+
     stop=False
     reponse=''
-    for i in range(position_depart+1, nbLig):
-        if not (liste_contenu_car[i] in ponctuation) and stop==False:
-            reponse+=liste_contenu_car[i]
+    for i in range(position_depart+1, len(contenu)):
+        if not (liste_contenu[i] in ponctuation) and stop==False:
+            reponse+=liste_contenu[i]
         else:
             stop=True
 
+    return reponse
 
 def affiner_reponse(question, reponse):
     ponctuation_final = ['!', '?', '.', '...']
@@ -443,19 +453,30 @@ def affiner_reponse(question, reponse):
         "Pourquoi": "Car, ",
         "Peux-tu": "Oui, bien sûr!"
     }
+
+    LA_question=''
+
     questionnement = question_starters.keys()   #questionnement correspond au début de question (Où? Quand? Comment? etc)
     for mot in questionnement:
         if mot in question:
             LA_question=mot                     #le questionnement present dans la question de l'utilisateur
-    reponse_affiner=question_starters[LA_question]  #la reponse affiner prend la reponse correspondant à la question
+            reponse_affiner=question_starters[LA_question]  #la reponse affiner prend la reponse correspondant à la question
+
+    if LA_question=='':
+        reponse_affiner=''
+        dernier_car=''
+
     for car in reponse:
         for car_f in reponse_affiner:   #prend le dernier caractere de la reponse affiner
             dernier_car = car_f
+
         if (dernier_car in ponctuation_final) and (97<=ord(car)<=122):  #et si c une ponctuation final et que le caractere actuel de la reponse est en minuscule
             car = chr(ord(car) - 32)    #on la transforme en majuscule
             reponse_affiner += ' ' + car    #on ajoute donc un espace et la lettre majuscule
         else:
             reponse_affiner+=car
+
     if not car in ponctuation_final:    #si le dernier caractere de la reponse affiner n'est pas une ponctuation, on rajoute un point
         reponse_affiner+='.'
+
     return reponse_affiner
