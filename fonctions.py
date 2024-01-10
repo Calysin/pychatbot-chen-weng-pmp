@@ -78,9 +78,9 @@ def ConversionMajusculeEnMinuscule(L): #Fonction convertissant les majuscules pr
     ListeNomNum = extraire_noms_avec_numero(L)  #Créer une variable appelant la fonction extraire_noms_avec_numero
     for i in range(len(ListeNomNum)):
         with open("speeches/Nomination_{}.txt".format(ListeNomNum[i]), "r") as f, open("cleaned/CleanedNomination_{}.txt".format(ListeNomNum[i]), "w") as f1: #Ouvre deux fichiers, le premier en f en mode lecture et le deuxième en f1 en mode écriture
-            contenu = f.readlines() #Retranscrit les minuscules et change les majuscules en minuscule
-            for ligne in contenu:
-                for lettre in ligne:
+            contenu = f.readlines()  # lis le contenu
+            for ligne in contenu:  # prends toutes les lignes dans contenu
+                for lettre in ligne:  # prendre tous les lettres de chaque ligne
                     if 65 <= ord(lettre) <= 90:
                         LettreMinuscule = lettre.lower()
                         f1.write(LettreMinuscule)
@@ -391,12 +391,18 @@ def contenu_doc_plus_imp(doc_plus_pert): #doc plus important correspond au disco
         contenu=f.read()
     return contenu
 
-def TFIDFQuestionPlusElevee():
+def TFIDFQuestionPlusElevee(question, files_names):
     QuestionTFIDFMax = max(TF_IDF_question(question, files_names))
     return QuestionTFIDFMax
 
-def RepererFirstOccDansDocPertinant():
-    calcul_doc_plus_pert(question, files_names)
+def FirstOccRéponse(question, files_names):
+    DocPlusPert = calcul_doc_plus_pert(question, files_names)
+    print(DocPlusPert)
+    f = open("speeches/Nomination_{}.txt".format(DocPlusPert), "r")
+    contenu = f.readlines() #lis le contenu
+    for ligne in contenu: #prends toutes les lignes dans contenu
+        for lettre in ligne: #prendre tous les lettres de chaque ligne
+            return lettre
 
 def affiner_reponse(question, reponse):
     ponctuation_final = ['!', '?', '.', '...']

@@ -10,6 +10,8 @@ CleanedQuestion(Question)
 
 test = print("test", TF_IDF_question(Question, files_names))
 tes = print("tes", calcul_doc_plus_pert(Question, files_names))
+te = print("te", TFIDFQuestionPlusElevee(Question, files_names))
+t = print("t", contenu_doc_plus_imp(te))
 
 print("\n")
 print("\n")
