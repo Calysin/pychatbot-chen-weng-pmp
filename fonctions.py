@@ -404,6 +404,10 @@ def Reponse(question, files_names):
     ponctuation = ['!', '?', '.']
 
     doc_plus_pert = calcul_doc_plus_pert(question, files_names)
+
+    if doc_plus_pert==None:
+        return "Votre question n'a aucune correspondance avec les documents"
+
     contenu1 = contenu_doc_plus_imp(doc_plus_pert)
     contenu= contenu1.replace('\n', ' ')
     mot = TFIDFQuestionPlusElevee(question, files_names)
