@@ -11,3 +11,4 @@ Fonctionnalités principales de notre application:
 -Afficher le mot le plus répéter par un président  
 -Afficher la liste des présidents qui ont parlé de la (Nation) et celui qui l'a répété le plus de fois  
 -Afficher le premier présidant ayant parlé de climat et d'écologie
+-Répondre à votre question posée concernant les thèmes mentionnées dans les discours des présidents nominés
