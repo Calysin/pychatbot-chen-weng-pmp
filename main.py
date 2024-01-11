@@ -41,9 +41,9 @@ while recommencer==1:
         print("Le premier président ayant dit climat est", PremierClimat(files_names))
         print("Le premier présidant ayant dit écologie est", PremierEcologie(files_names))
     elif functionality == "6":
-        print("Celui-ci est encore en cours de developpement")
+        print("Cette fonctionnalité a été retiré, nous sommes désolé de la gêne occassionnée")
     elif functionality >= "7":
-        Question = input("Donnez moi votre question ? ")
+        Question = input("Quelle est votre question ? ")
         rep=Reponse(Question, files_names)
         print(affiner_reponse(Question, rep))
 
