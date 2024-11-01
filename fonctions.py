@@ -428,11 +428,11 @@ def Reponse(question, files_names):
             while  liste_contenu[i+j]!=" ":
                 mot_contenu+=liste_contenu[i+j]
                 j += 1
-
+                
             if mot==mot_contenu:
                 FirstOcc = i
                 break
-
+                
     stop=False
     for i in range(FirstOcc, 0-1, -1):
         if (liste_contenu[i] in ponctuation) and stop==False:
@@ -457,7 +457,7 @@ def affiner_reponse(question, reponse):
         "Pourquoi": "Car, ",
         "Peux-tu": "Oui, bien sûr!"
     }
-
+    
     LA_question=''
 
     questionnement = question_starters.keys()   #questionnement correspond au début de question (Où? Quand? Comment? etc)
