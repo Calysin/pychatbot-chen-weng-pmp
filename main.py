@@ -43,7 +43,9 @@ while recommencer==1:
     elif functionality == "6":
         print("Cette fonctionnalité a été retiré, nous sommes désolé de la gêne occassionnée")
     elif functionality >= "7":
-        Question = input("Quelle est votre question ? ")
+      
+        Question = input("Donnez moi votre question ? ")
+
         rep=Reponse(Question, files_names)
         print(affiner_reponse(Question, rep))
 
